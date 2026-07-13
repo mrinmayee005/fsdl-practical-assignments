@@ -1,0 +1,49 @@
+<!--2. Design a reusable Skill Bar Component that accepts skill name and proficiency percentage as input and visually represents it.-->
+
+<html>
+    <head>
+        <title>Reusable skill component</title>
+    
+        <style>
+            body{
+                font-family:Arial, Helvetica, sans-serif;
+                background: #f4f6f8;
+                padding :20px;
+            }
+            p{margin:5px 0;
+            font-weight: bold;}
+
+            .bar{
+                width:100%;
+                background: #ddd;
+                border-radius: 20px;
+                overflow:hidden;
+                margin-bottom: 10px;
+            }
+
+            .fill{
+                padding:5px;
+                color:white;
+                border-radius: 20px;
+                text-align: right;
+            }
+        </style>
+    </head>
+    <body>
+        <h2>My Skills</h2>
+        <div id="skills"></div>
+
+        <script>
+            function skill(name,percent)
+            {
+                document.getElementById("skills").innerHTML+=
+                "<p>"+name+"</p>"+
+                "<div class='bar'><div class='fill' style='width:"+percent+"%; background:linear-gradient(to right,#4facfe, #00f2fe)'>"+percent+"%</div></div>";
+            }
+
+
+            skill("HTML",90);
+            skill("CSS",80);
+        </script>
+    </body>
+</html>

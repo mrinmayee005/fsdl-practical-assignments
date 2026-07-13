@@ -1,0 +1,53 @@
+<html>
+    <body>
+
+        <h3>Stop watch</h3>
+
+        <h3 id="t">00.00.00</h3>
+        <button onclick="start()">Start</button>
+        <button onclick="stop()">Stop</button>
+        <button onclick="reset()">Reset</button>
+
+        <script>
+  let s=0,h=0,m=0,timer;
+            function show()
+            {
+               document.getElementById("t").innerText=
+               (h<10?"0":"")+h+":"+
+               (m<10?"0":"")+m+":"+
+               (s<10?"0":"")+s
+            }
+
+            function start()
+            {
+                if(!timer)
+            {
+                timer=setInterval(()=>{
+                    s++;
+                    if(s==60) {s=0,m++}
+                    if(m==60) {m=0,m++}
+                    show();
+                },1000);
+            }
+            }
+
+            function stop()
+            {
+                clearInterval(timer);
+                timer=null;
+            }
+            function reset()
+            {
+                stop();
+                s=m=h=0;
+                show();
+            }
+        </script>
+    </body>
+</html>
+
+
+if(document.querySelector('input[name="q1"]:checked')?.value==4) score++;
+
+
+i.style.display=(c=="all"||c.classList.contains(c))?"block":"none"

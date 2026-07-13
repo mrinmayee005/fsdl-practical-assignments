@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard Pro</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <aside class="sidebar">
+            <div class="search-container">
+                <input type="text" id="cityInput" placeholder="Search city...">
+                <button id="searchBtn"><i class="fas fa-search"></i></button>
+            </div>
+            
+            <div class="main-display">
+                <img id="weatherIcon" src="" alt="Weather">
+                <h1 id="tempMain">--°C</h1>
+                <div class="time-container">
+                    <p id="localDay">Monday</p>
+                    <p id="localTime">12:00</p>
+                </div>
+                <hr>
+                <div class="meta-info">
+                    <p><i class="fas fa-cloud"></i> <span id="condition">Cloudy</span></p>
+                    <p><i class="fas fa-location-arrow"></i> <span id="locationName">City, Country</span></p>
+                </div>
+            </div>
+        </aside>
+
+        <main class="content">
+            <header>
+                <h2>Today's Highlights</h2>
+            </header>
+
+            <div class="highlights-grid">
+                <div class="card">
+                    <span class="label">Wind Speed</span>
+                    <div class="val"><span id="wind">0</span> <small>km/h</small></div>
+                </div>
+                <div class="card">
+                    <span class="label">Humidity</span>
+                    <div class="val"><span id="humidity">0</span> <small>%</small></div>
+                </div>
+                <div class="card">
+                    <span class="label">Visibility</span>
+                    <div class="val"><span id="visibility">0</span> <small>km</small></div>
+                </div>
+                <div class="card">
+                    <span class="label">Air Pressure</span>
+                    <div class="val"><span id="pressure">0</span> <small>hPa</small></div>
+                </div>
+            </div>
+
+            <div class="chart-box">
+                <h3>5-Day Forecast Trend</h3>
+                <canvas id="weatherChart"></canvas>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

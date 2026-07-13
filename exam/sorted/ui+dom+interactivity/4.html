@@ -1,0 +1,62 @@
+<!--4. Develop a Real-Time Profile Previewer where user input in a form is instantly reflected in a profile card layout.-->
+<html>
+    <head>
+        <title>Profile
+        </title>
+        <style>
+           body{
+            font-family: Arial, Helvetica, sans-serif;
+            display: flex;
+            justify-content: center;
+            background:whitesmoke;
+            padding: 20px;
+           }
+
+           .container{
+            background: cornsilk;
+            border: 1px solid black;
+            align-items: center;
+            border-radius: 10px;
+            text-align: center;
+            width :500px
+           }
+
+           input{
+           
+            margin:5px;
+            padding:5px;
+            width:180px;
+                   }
+
+           .cards
+           {
+                border:1px solid black;
+                width:300px;
+                margin:15px auto;
+                padding: 10px;
+                border-radius: 8px;
+                background: white;
+           }
+        </style>
+    </head>
+<body>
+
+    <div class="container">
+        <input  id="n" type="text" placeholder="name"  oninput="u()"><br>
+        <input id="e" type="text" placeholder="email"  oninput="u()"><br>
+        
+        <div class="cards">
+            <h3 id="pn">Name</h3>
+            <p id="pe">Email</p>
+        </div>
+    </div>
+
+    <script>
+        function u()
+        {
+            pn.innerText=n.value||"Name";
+            pe.innerText=e.value||"Email";
+        }
+    </script>
+</body>
+    </html>

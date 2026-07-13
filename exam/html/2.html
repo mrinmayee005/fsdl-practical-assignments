@@ -1,0 +1,42 @@
+<!--Create a weekly class timetable using HTML tables with proper use of rowspan and colspan.	
+Static Frontend UI -->
+
+<html>
+    <head>
+        <title>Timetable</title>
+        <style>
+            table, th, td{
+                border:1px solid black;
+                border-collapse:collapse;
+                padding:10px;
+                text-align:center;
+            }
+        </style>
+    </head>
+
+    <body>
+        <table>
+            <tr>
+                <th>Day</th>
+                <th>9-10</th>
+                <th>10-11</th>
+                <th>11-12</th>
+                <th>12-1</th>
+            </tr>
+
+            <tr>
+                <td>Mon</td>
+                <td rowspan="2">Maths</td>
+                <td>OS</td>
+                <td colspan="2">Lab</td>
+            </tr>
+
+            <tr>
+                <td>Tue</td>
+                <td>DBMS</td>
+                <td>CN</td>
+                <td>AI</td>
+            </tr>
+        </table>
+    </body>
+</html>

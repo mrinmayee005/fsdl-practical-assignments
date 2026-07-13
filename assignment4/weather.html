@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Weather  | Live Weather Analytics</title>
+
+    <!-- Bootstrap & Fonts -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <!-- Chart.js & Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root { --accent:#38bdf8; --bg:#0f172a; --card:rgba(30,41,59,.7); }
+        body {
+            background: var(--bg);
+            color: #f1f5f9;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            padding: 40px 20px;
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 25px;
+        }
+        .glass-tile {
+            background: var(--card);
+            backdrop-filter: blur(15px);
+            border-radius: 28px;
+            padding: 25px;
+            height: 420px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .tile-title {
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .chart-container {
+            flex-grow: 1;
+            position: relative;
+            min-height: 0;
+        }
+        .control-hub {
+            border: 1px dashed var(--accent);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 40px;
+        }
+        .btn-sync {
+            background: var(--accent);
+            border: none;
+            font-weight: 700;
+            padding: 12px 30px;
+            border-radius: 15px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <!-- HEADER -->
+    <header class="mb-5 d-flex justify-content-between align-items-end">
+        <div>
+            <h1 class="fw-bold">WEATHER <span class="text-info"></span></h1>
+            <p class="text-muted">Real-Time Climate & Atmospheric Monitoring</p>
+        </div>
+        <button class="btn btn-sync" onclick="randomizeAll()">
+            <i data-lucide="refresh-cw"></i> Sync Weather
+        </button>
+    </header>
+
+    <!-- CONTROL PANEL -->
+    <div class="control-hub">
+        <h6 class="text-info fw-bold mb-3">Live Weather Controls</h6>
+        <div class="row g-3">
+            <div class="col-md-2">
+                <label>Temperature (°C)</label>
+                <input class="form-control" id="tempInp" value="30" oninput="updateTemp()">
+            </div>
+            <div class="col-md-2">
+                <label>Humidity (%)</label>
+                <input class="form-control" id="humInp" value="60" oninput="updateHumidity()">
+            </div>
+            <div class="col-md-2">
+                <label>Rainfall (mm)</label>
+                <input class="form-control" id="rainInp" value="15" oninput="updateRain()">
+            </div>
+            <div class="col-md-2">
+                <label>Wind Speed (km/h)</label>
+                <input class="form-control" id="windInp" value="20" oninput="updateWind()">
+            </div>
+        </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="dashboard-grid">
+
+        <!-- Temperature -->
+        <div class="glass-tile">
+            <div class="tile-title"><i data-lucide="thermometer"></i> Temperature Trend</div>
+            <div class="chart-container"><canvas id="tempChart"></canvas></div>
+        </div>
+
+        <!-- Humidity -->
+        <div class="glass-tile">
+            <div class="tile-title"><i data-lucide="droplet"></i> Humidity Level</div>
+            <div class="chart-container"><canvas id="humidityChart"></canvas></div>
+        </div>
+
+        <!-- Rainfall -->
+        <div class="glass-tile">
+            <div class="tile-title"><i data-lucide="cloud-rain"></i> Rainfall Report</div>
+            <div class="chart-container"><canvas id="rainChart"></canvas></div>
+        </div>
+
+        <!-- Wind -->
+        <div class="glass-tile">
+            <div class="tile-title"><i data-lucide="wind"></i> Wind Direction</div>
+            <div class="chart-container"><canvas id="windChart"></canvas></div>
+        </div>
+
+        <!-- Pressure -->
+        <div class="glass-tile">
+            <div class="tile-title"><i data-lucide="activity"></i> Air Pressure</div>
+            <div class="chart-container"><canvas id="pressureChart"></canvas></div>
+        </div>
+
+        <!-- Weather Type -->
+        <div class="glass-tile">
+            <div class="tile-title"><i data-lucide="cloud-sun"></i> Weather Condition</div>
+            <div class="chart-container"><canvas id="conditionChart"></canvas></div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+Chart.defaults.color = '#cbd5f5';
+
+let charts = {};
+
+function initCharts() {
+
+    charts.temp = new Chart(tempChart, {
+        type: 'line',
+        data: {
+            labels: ['6AM','9AM','12PM','3PM','6PM'],
+            datasets: [{ label:'°C', data:[22,25,30,33,28], borderColor:'#38bdf8', fill:true }]
+        },
+        options:{ maintainAspectRatio:false }
+    });
+
+    charts.humidity = new Chart(humidityChart, {
+        type: 'doughnut',
+        data: {
+            labels:['Humidity','Dry'],
+            datasets:[{ data:[60,40], backgroundColor:['#38bdf8','#334155'] }]
+        },
+        options:{ maintainAspectRatio:false, cutout:'70%' }
+    });
+
+    charts.rain = new Chart(rainChart, {
+        type: 'bar',
+        data: {
+            labels:['Mon','Tue','Wed','Thu','Fri'],
+            datasets:[{ label:'mm', data:[5,10,20,15,8], backgroundColor:'#0ea5e9' }]
+        },
+        options:{ maintainAspectRatio:false }
+    });
+
+    charts.wind = new Chart(windChart, {
+        type: 'radar',
+        data: {
+            labels:['N','E','S','W'],
+            datasets:[{ data:[15,20,18,22], borderColor:'#22c55e' }]
+        },
+        options:{ maintainAspectRatio:false }
+    });
+
+    charts.pressure = new Chart(pressureChart, {
+        type:'polarArea',
+        data:{
+            labels:['Zone A','Zone B','Zone C'],
+            datasets:[{ data:[1012,1008,1015], backgroundColor:['#60a5fa','#fb7185','#34d399'] }]
+        },
+        options:{ maintainAspectRatio:false }
+    });
+
+    charts.condition = new Chart(conditionChart, {
+        type:'pie',
+        data:{
+            labels:['Sunny','Cloudy','Rainy'],
+            datasets:[{ data:[50,30,20], backgroundColor:['#fde047','#94a3b8','#38bdf8'] }]
+        },
+        options:{ maintainAspectRatio:false }
+    });
+}
+
+function updateTemp() {
+    charts.temp.data.datasets[0].data[4] = tempInp.value;
+    charts.temp.update();
+}
+function updateHumidity() {
+    charts.humidity.data.datasets[0].data = [humInp.value, 100-humInp.value];
+    charts.humidity.update();
+}
+function updateRain() {
+    charts.rain.data.datasets[0].data[4] = rainInp.value;
+    charts.rain.update();
+}
+function updateWind() {
+    charts.wind.data.datasets[0].data[1] = windInp.value;
+    charts.wind.update();
+}
+
+function randomizeAll() {
+    Object.values(charts).forEach(c=>{
+        c.data.datasets[0].data = c.data.datasets[0].data.map(()=>Math.floor(Math.random()*50)+10);
+        c.update();
+    });
+}
+
+initCharts();
+lucide.createIcons();
+</script>
+
+</body>
+</html>

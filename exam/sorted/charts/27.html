@@ -1,0 +1,62 @@
+<!--27. Develop a Weather Dashboard that displays weekly data using Line, Bar, and Pie charts.-->
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Weather Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<h2 style="text-align:center;">Weekly Weather Dashboard</h2>
+
+<canvas id="lineChart"></canvas>
+<canvas id="barChart"></canvas>
+<canvas id="pieChart"></canvas>
+
+<script>
+let days = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+let temp = [30, 32, 31, 29, 28, 33, 34];
+
+// LINE CHART
+new Chart(document.getElementById("lineChart"), {
+  type: "line",
+  data: {
+    labels: days,
+    datasets: [{
+      label: "Temperature",
+      data: temp,
+      borderColor: "blue"
+    }]
+  }
+});
+
+// BAR CHART
+new Chart(document.getElementById("barChart"), {
+  type: "bar",
+  data: {
+    labels: days,
+    datasets: [{
+      label: "Temperature",
+      data: temp,
+      backgroundColor: "orange"
+    }]
+  }
+});
+
+// PIE CHART (Weather distribution example)
+new Chart(document.getElementById("pieChart"), {
+  type: "pie",
+  data: {
+    labels: ["Sunny", "Cloudy", "Rainy"],
+    datasets: [{
+      data: [4, 2, 1],
+      backgroundColor: ["yellow", "gray", "blue"]
+    }]
+  }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration | Prestige Institute of Engineering & Technology</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --navy-main: #1a237e;
+            --gold-main: #f59e0b;
+            --gold-hover: #d97706;
+            --navy-light: #283593;
+        }
+
+        body { font-family: 'Montserrat', sans-serif; background-color: #f0f2f5; }
+
+        .navbar { transition: all 0.5s ease; padding: 20px 0; background: var(--navy-main); }
+        .nav-link { color: rgba(255,255,255,0.9) !important; font-size: 0.875rem; font-weight: 500; }
+        .btn-apply { background: linear-gradient(to right, var(--gold-main), var(--gold-hover)); color: white !important; border-radius: 8px; font-weight: 600; }
+
+        .hero-mini { background: linear-gradient(135deg, #1a237e 0%, #0d1b3e 100%); padding: 100px 0 60px; color: white; text-align: center; }
+
+        .registration-card {
+            background: white;
+            border-radius: 24px;
+            border: none;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            margin-top: -50px;
+            overflow: hidden;
+        }
+
+        .step-indicator {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .step-dot {
+            width: 35px; height: 35px;
+            background: #e9ecef;
+            color: #6c757d;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .step-dot.active { background: var(--navy-main); color: white; }
+        .step-dot.completed { background: #10b981; color: white; }
+
+        .form-label { font-weight: 600; color: #374151; font-size: 0.9rem; }
+        .form-control, .form-select {
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            transition: 0.3s;
+        }
+        .form-control:focus { border-color: var(--navy-main); box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1); }
+
+        .btn-next { background: var(--navy-main); color: white; padding: 12px 30px; border-radius: 10px; font-weight: 600; border: none; }
+        .btn-next:hover { background: var(--navy-light); color: white; }
+        
+        .footer-main { background-color: #0d1b3e; color: white; margin-top: 80px; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-3" href="#">
+                <i data-lucide="graduation-cap" class="text-white"></i>
+                <h1 class="h5 fw-bold mb-0 text-white">Prestige Institute</h1>
+            </a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center gap-1">
+                    <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Faculty</a></li>
+                    <li class="nav-item ms-lg-3"><a class="btn btn-apply px-4" href="#">Apply Now</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero-mini">
+        <div class="container">
+            <h1 class="fw-bold">Student Registration</h1>
+            <p class="opacity-75">Admission Open for Academic Session 2026-27</p>
+        </div>
+    </header>
+
+    <main class="container mb-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card registration-card">
+                    <div class="step-indicator d-flex justify-content-around align-items-center">
+                        <div class="text-center">
+                            <div class="step-dot active mx-auto mb-2" id="dot1">1</div>
+                            <small class="fw-bold">Personal</small>
+                        </div>
+                        <div class="flex-grow-1 border-top mx-3 mb-4"></div>
+                        <div class="text-center">
+                            <div class="step-dot mx-auto mb-2" id="dot2">2</div>
+                            <small class="fw-bold">Academic</small>
+                        </div>
+                        <div class="flex-grow-1 border-top mx-3 mb-4"></div>
+                        <div class="text-center">
+                            <div class="step-dot mx-auto mb-2" id="dot3">3</div>
+                            <small class="fw-bold">Address</small>
+                        </div>
+                    </div>
+
+                    <form id="regForm" class="p-4 p-md-5" action="/add-student" method="POST">
+                        
+                        <div class="step-content" id="step1">
+                            <h4 class="fw-bold mb-4 text-navy">Personal Details</h4>
+                            <div class="row g-3">
+                                <div class="col-12 mb-2">
+                                    <label class="form-label">Roll Number (Unique ID)</label>
+                                    <input type="text" name="rollNo" class="form-control" placeholder="e.g. 26PIET001" required>
+                                    <div class="form-text text-danger small">Must be unique. Duplicate values will cause an error.</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">First Name</label>
+                                    <input type="text" name="firstName" class="form-control" placeholder="John" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Last Name</label>
+                                    <input type="text" name="lastName" class="form-control" placeholder="Doe" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Email ID</label>
+                                    <input type="email" name="email" class="form-control" placeholder="john@example.com" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Phone Number</label>
+                                    <input type="tel" name="phone" class="form-control" placeholder="+91 00000 00000" required>
+                                </div>
+                            </div>
+                            <div class="text-end mt-4">
+                                <button type="button" class="btn btn-next" onclick="nextStep(2)">Next Step <i data-lucide="arrow-right" size="16"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="step-content d-none" id="step2">
+                            <h4 class="fw-bold mb-4">Academic Background</h4>
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label">Select Course Preference</label>
+                                    <select name="course" class="form-select" required>
+                                        <option value="">Choose Course...</option>
+                                        <option value="B.Tech Computer Science">B.Tech Computer Science</option>
+                                        <option value="B.Tech Mechanical">B.Tech Mechanical</option>
+                                        <option value="B.Tech Electrical">B.Tech Electrical</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">12th Percentage</label>
+                                    <input type="number" name="percentage" class="form-control" placeholder="e.g. 85">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Year of Passing</label>
+                                    <input type="number" name="passingYear" class="form-control" placeholder="2025">
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between mt-4">
+                                <button type="button" class="btn btn-light" onclick="nextStep(1)">Back</button>
+                                <button type="button" class="btn btn-next" onclick="nextStep(3)">Next Step</button>
+                            </div>
+                        </div>
+
+                        <div class="step-content d-none" id="step3">
+                            <h4 class="fw-bold mb-4">Contact Address</h4>
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label">Permanent Address</label>
+                                    <textarea name="address" class="form-control" rows="3"></textarea>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">City</label>
+                                    <input type="text" name="city" class="form-control">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Pincode</label>
+                                    <input type="text" name="pincode" class="form-control">
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between mt-4">
+                                <button type="button" class="btn btn-light" onclick="nextStep(2)">Back</button>
+                                <button type="submit" class="btn btn-success px-5 py-2">Submit Application</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer-main py-5">
+        <div class="container text-center">
+            <p class="small text-white-50 mb-0">© 2026 Prestige Institute of Engineering & Technology. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        function nextStep(step) {
+            // Basic validation for Step 1
+            if (step === 2) {
+                const roll = document.querySelector('input[name="rollNo"]').value;
+                if (!roll) { alert("Roll Number is required to prevent database errors."); return; }
+            }
+
+            document.querySelectorAll('.step-content').forEach(el => el.classList.add('d-none'));
+            document.getElementById('step' + step).classList.remove('d-none');
+            
+            document.querySelectorAll('.step-dot').forEach((dot, index) => {
+                if (index + 1 < step) {
+                    dot.classList.add('completed');
+                    dot.classList.remove('active');
+                    dot.innerHTML = '<i data-lucide="check" size="16"></i>';
+                } else if (index + 1 === step) {
+                    dot.classList.add('active');
+                    dot.classList.remove('completed');
+                    dot.innerText = step;
+                } else {
+                    dot.classList.remove('active', 'completed');
+                    dot.innerText = index + 1;
+                }
+            });
+            lucide.createIcons();
+        }
+    </script>
+</body>
+</html>

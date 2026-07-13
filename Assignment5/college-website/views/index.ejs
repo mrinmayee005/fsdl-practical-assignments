@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prestige Institute of Engineering & Technology</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --navy-main: #1a237e;
+            --navy-dark: #121858;
+            --gold-main: #ffb300;
+            --light-blue: #eff6ff;
+            --glass-white: rgba(255, 255, 255, 0.1);
+        }
+
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            margin: 0; 
+            overflow-x: hidden;
+            color: #333;
+        }
+
+        /* --- Utility Classes --- */
+        .bg-navy { background-color: var(--navy-main); }
+        .text-navy { color: var(--navy-main); }
+        .bg-navy-light { background-color: rgba(26, 35, 126, 0.1); }
+        .bg-gold { background-color: var(--gold-main); color: #fff; }
+        .text-gold { color: var(--gold-main); }
+        .bg-white-20 { background-color: var(--glass-white); }
+        .backdrop-blur { backdrop-filter: blur(10px); background: var(--glass-white); }
+        .bg-dark-gradient { background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); }
+
+        /* --- Hero Carousel --- */
+        .vh-100 { height: 100vh; }
+        .hero-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to right, rgba(26, 35, 126, 0.85), rgba(26, 35, 126, 0.4), transparent);
+            z-index: 2;
+        }
+        .slide-bg {
+            position: absolute; inset: 0;
+            background-size: cover; background-position: center;
+            transition: transform 6s ease; z-index: 1;
+        }
+        .carousel-item.active .slide-bg { transform: scale(1.1); }
+        .max-w-700 { max-width: 700px; }
+
+        /* --- About Section Images --- */
+        .img-stack img { transition: transform 0.3s ease; }
+        .img-stack img:hover { transform: scale(1.02); }
+
+        /* --- Course Cards --- */
+        .course-card { 
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); 
+            border: 1px solid #eee !important;
+        }
+        .course-card:hover { 
+            transform: translateY(-12px); 
+            border-color: var(--navy-main) !important; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1); 
+        }
+        .icon-box {
+            width: 60px; height: 60px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 15px; font-size: 24px;
+        }
+        .bg-gradient-blue { background: linear-gradient(135deg, #3b82f6, #4f46e5); }
+        .bg-gradient-orange { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .bg-gradient-green { background: linear-gradient(135deg, #10b981, #059669); }
+
+        /* --- News Ticker --- */
+        .ticker-wrapper { overflow: hidden; white-space: nowrap; }
+        .ticker-text {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 25s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* --- Stats Glass Cards --- */
+        .stat-card-glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 25px;
+            text-align: center;
+        }
+
+        /* --- Animations --- */
+        .pulse-dot-amber {
+            width: 10px; height: 10px;
+            background: var(--gold-main); border-radius: 50%;
+            display: inline-block; animation: pulse 1.8s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.6); opacity: 0.4; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .animate-up { opacity: 0; animation: fadeInUp 0.8s forwards; }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .navbar {
+            transition: all 0.5s ease;
+            padding: 20px 0;
+        }
+        .navbar.scrolled {
+            background: white !important;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            padding: 10px 0;
+        }
+        .nav-link {
+            color: rgba(255,255,255,0.9) !important;
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 8px 16px !important;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .navbar.scrolled .nav-link {
+            color: #374151 !important; /* Gray-700 */
+        }
+        .nav-link:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        .navbar.scrolled .nav-link:hover {
+            background: #f3f4f6;
+        }
+        .navbar.scrolled .navbar-brand h1 { color: var(--navy-main) !important; }
+        .navbar.scrolled .navbar-brand p { color: #6b7280 !important; }
+        .navbar.scrolled .logo-box { background: var(--navy-main) !important; }
+
+        .btn-apply {
+            background: linear-gradient(to right, var(--gold-main), var(--gold-hover));
+            color: white !important;
+            border: none;
+            padding: 10px 24px !important;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-apply:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(245, 158, 11, 0.3);
+        }
+        .footer-main { background-color: #0d1b3e; color: white; }
+.footer-newsletter { background: linear-gradient(to right, #1a237e, #283593); }
+
+.footer-link {
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.footer-link:hover {
+    color: var(--gold-main);
+    transform: translateX(5px);
+}
+
+.social-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.social-btn:hover {
+    background: var(--gold-main);
+    color: white;
+    transform: translateY(-3px);
+}
+
+.footer-heading-line {
+    width: 32px;
+    height: 4px;
+    background-color: var(--gold-main);
+    border-radius: 2px;
+    display: inline-block;
+}
+    </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg fixed-top" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-3" href="#">
+                <div class="logo-box p-2 rounded-3 bg-white-20 transition-all">
+                    <i data-lucide="graduation-cap" class="text-white" style="width: 32px; height: 32px;"></i>
+                </div>
+                <div>
+                    <h1 class="h5 fw-bold mb-0 text-white transition-all">Prestige Institute</h1>
+                    <p class="small mb-0 text-white-50 tracking-wider transition-all" style="font-size: 10px;">OF ENGINEERING & TECHNOLOGY</p>
+                </div>
+            </a>
+            
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <i data-lucide="menu" class="text-white"></i>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav ms-auto align-items-center gap-1">
+    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+    <li class="nav-item"><a class="nav-link" href="/about">About Us</a></li>
+    <li class="nav-item"><a class="nav-link" href="/courses">Courses</a></li>
+    <li class="nav-item"><a class="nav-link" href="/admissions">Admissions</a></li>
+    <li class="nav-item"><a class="nav-link" href="/faculty">Faculty</a></li>
+    <li class="nav-item"><a class="nav-link" href="/contact">Contact</a></li>
+    <li class="nav-item ms-lg-3">
+        <a class="btn btn-apply" href="/registration">Apply Now</a>
+    </li>
+</ul>
+            </div>
+        </div>
+    </nav>
+    <section id="heroCarousel" class="carousel slide carousel-fade vh-100" data-bs-ride="carousel">
+        <div class="carousel-indicators z-3">
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
+        </div>
+
+        <div class="carousel-inner h-100">
+            <div class="carousel-item active h-100">
+                <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1562774053-701939374585?w=1920&q=80');"></div>
+                <div class="hero-overlay"></div>
+                <div class="container h-100 d-flex align-items-center position-relative z-3">
+                    <div class="max-w-700">
+                        <span class="badge rounded-pill backdrop-blur text-gold p-2 px-3 mb-4 d-inline-flex align-items-center">
+                            <span class="pulse-dot-amber me-2"></span> Join the Rank of Innovators
+                        </span>
+                        <h1 class="display-1 fw-bold text-white mb-4 animate-up">Shape the Future of Tech</h1>
+                        <p class="lead text-white-50 mb-5 animate-up" style="animation-delay: 0.2s;">Excellence in Engineering through research, innovation, and global industry partnerships.</p>
+                        <div class="d-flex gap-3 animate-up" style="animation-delay: 0.4s;">
+                            <a href="#" class="btn btn-gold btn-lg px-4 py-3 fw-bold border-0">Apply Now <i data-lucide="arrow-right" class="ms-1"></i></a>
+                            <button class="btn btn-outline-light btn-lg backdrop-blur px-4 py-3">Campus Tour</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item h-100">
+                <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1920&q=80');"></div>
+                <div class="hero-overlay"></div>
+                <div class="container h-100 d-flex align-items-center position-relative z-3">
+                    <div class="max-w-700">
+                        <span class="badge rounded-pill backdrop-blur text-gold p-2 px-3 mb-4 d-inline-flex align-items-center">
+                            <span class="pulse-dot-amber me-2"></span> 100% Placement Track Record
+                        </span>
+                        <h1 class="display-1 fw-bold text-white mb-4 animate-up">Launch Your Career</h1>
+                        <p class="lead text-white-50 mb-5 animate-up">Connect with top-tier global companies and secure your dream career before you graduate.</p>
+                        <div class="d-flex gap-3 animate-up">
+                            <a href="#" class="btn btn-gold btn-lg px-4 py-3 fw-bold border-0">Placement Cell</a>
+                            <button class="btn btn-outline-light btn-lg backdrop-blur px-4 py-3">Our Alumni</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button class="carousel-control-prev z-3" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon p-3 bg-dark rounded-circle opacity-50"></span>
+        </button>
+        <button class="carousel-control-next z-3" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon p-3 bg-dark rounded-circle opacity-50"></span>
+        </button>
+    </section>
+
+    <section class="py-5 bg-light overflow-hidden">
+        <div class="container py-5">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6 position-relative img-stack">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <img src="https://images.unsplash.com/photo-1562774053-701939374585?w=600&q=80" class="rounded-4 shadow w-100 object-fit-cover mb-3" style="height: 200px;" alt="Campus">
+                            <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&q=80" class="rounded-4 shadow w-100 object-fit-cover" style="height: 250px;" alt="Graduation">
+                        </div>
+                        <div class="col-6 pt-5">
+                            <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600&q=80" class="rounded-4 shadow w-100 object-fit-cover mb-3" style="height: 250px;" alt="Classroom">
+                            <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=600&q=80" class="rounded-4 shadow w-100 object-fit-cover" style="height: 200px;" alt="Lab">
+                        </div>
+                    </div>
+                    <div class="position-absolute bottom-0 end-0 bg-navy text-white p-4 rounded-4 shadow-lg translate-middle-y me-3">
+                        <p class="display-6 fw-bold mb-0">39+</p>
+                        <p class="small opacity-75 mb-0">Years of Legacy</p>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <span class="badge rounded-pill bg-navy-light text-navy mb-3 px-3 py-2">Our Story</span>
+                    <h2 class="display-5 fw-bold mb-4">Nurturing Excellence Since <span class="text-gold">1985</span></h2>
+                    <p class="lead text-muted mb-4">Prestige Institute stands as a beacon of academic excellence, fostering innovation and shaping the engineering leaders of tomorrow through rigorous training and industry exposure.</p>
+                    <div class="row g-3 mb-5">
+                        <div class="col-sm-6 d-flex align-items-center gap-2">
+                            <i data-lucide="award" class="text-gold"></i> <span class="small fw-semibold">NAAC A++ Accredited</span>
+                        </div>
+                        <div class="col-sm-6 d-flex align-items-center gap-2">
+                            <i data-lucide="briefcase" class="text-gold"></i> <span class="small fw-semibold">Top Tier Industry Placements</span>
+                        </div>
+                    </div>
+                    <a href="#" class="btn bg-navy text-white btn-lg rounded-3 px-4">Discover More <i data-lucide="chevron-right" class="ms-1"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5 bg-white">
+        <div class="container py-5">
+            <div class="text-center mb-5">
+                <h6 class="text-navy fw-bold text-uppercase tracking-widest mb-2">Our Programs</h6>
+                <h2 class="display-5 fw-bold">Academic Departments</h2>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4">
+                    <div class="course-card p-4 rounded-4 bg-light h-100">
+                        <div class="icon-box bg-gradient-blue mb-4 text-white">
+                            <i data-lucide="cpu"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">Computer Science</h4>
+                        <p class="text-muted small mb-4">Specializations in AI, Machine Learning, Cloud Computing and Cybersecurity.</p>
+                        <div class="d-flex gap-3 text-muted small mb-4">
+                            <span class="d-flex align-items-center"><i data-lucide="clock" class="me-1" size="16"></i> 4 Yrs</span>
+                            <span class="d-flex align-items-center"><i data-lucide="users" class="me-1" size="16"></i> 180 Seats</span>
+                        </div>
+                        <a href="#" class="text-navy fw-bold text-decoration-none small">Explore Program <i data-lucide="arrow-right" class="ms-1"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="course-card p-4 rounded-4 bg-light h-100">
+                        <div class="icon-box bg-gradient-orange mb-4 text-white">
+                            <i data-lucide="settings"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">Mechanical Engineering</h4>
+                        <p class="text-muted small mb-4">Advanced focus on Robotics, Mechatronics, and Sustainable Energy Systems.</p>
+                        <div class="d-flex gap-3 text-muted small mb-4">
+                            <span class="d-flex align-items-center"><i data-lucide="clock" class="me-1" size="16"></i> 4 Yrs</span>
+                            <span class="d-flex align-items-center"><i data-lucide="users" class="me-1" size="16"></i> 120 Seats</span>
+                        </div>
+                        <a href="#" class="text-navy fw-bold text-decoration-none small">Explore Program <i data-lucide="arrow-right" class="ms-1"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="course-card p-4 rounded-4 bg-light h-100">
+                        <div class="icon-box bg-gradient-green mb-4 text-white">
+                            <i data-lucide="zap"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">Electrical & Electronics</h4>
+                        <p class="text-muted small mb-4">Expertise in VLSI Design, Smart Grids, and Embedded System technologies.</p>
+                        <div class="d-flex gap-3 text-muted small mb-4">
+                            <span class="d-flex align-items-center"><i data-lucide="clock" class="me-1" size="16"></i> 4 Yrs</span>
+                            <span class="d-flex align-items-center"><i data-lucide="users" class="me-1" size="16"></i> 60 Seats</span>
+                        </div>
+                        <a href="#" class="text-navy fw-bold text-decoration-none small">Explore Program <i data-lucide="arrow-right" class="ms-1"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5 bg-light">
+        <div class="container py-5">
+            <div class="d-flex justify-content-between align-items-end mb-5">
+                <div>
+                    <span class="badge rounded-pill bg-navy-light text-navy mb-2 px-3 py-2">What's New</span>
+                    <h2 class="display-6 fw-bold mb-0">Campus Updates</h2>
+                </div>
+                <a href="#" class="btn btn-link text-navy fw-bold text-decoration-none p-0">All News <i data-lucide="arrow-right" class="ms-1"></i></a>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="card border-0 rounded-4 overflow-hidden shadow-sm h-100 position-relative">
+                        <img src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=800&q=80" class="card-img h-100 object-fit-cover" alt="Event">
+                        <div class="card-img-overlay d-flex flex-column justify-content-end bg-dark-gradient text-white p-4">
+                            <span class="badge bg-gold w-fit mb-2">Upcoming Event</span>
+                            <h3 class="fw-bold">National Tech Fest 2024</h3>
+                            <p class="small opacity-75">Join over 50 universities for the ultimate battle of brains and innovation.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 d-flex flex-column gap-3">
+                    <div class="p-4 bg-white rounded-4 shadow-sm border-start border-5 border-primary">
+                        <div class="d-flex gap-3">
+                            <div class="bg-navy-light text-navy p-2 rounded-3" style="height: fit-content;"><i data-lucide="bell"></i></div>
+                            <div>
+                                <h6 class="fw-bold mb-1">Semester Admissions Open</h6>
+                                <p class="small text-muted mb-0">Scholarship applications for the 2024 batch close in 15 days.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-white rounded-4 shadow-sm border-start border-5 border-warning">
+                        <div class="d-flex gap-3">
+                            <div class="bg-navy-light text-navy p-2 rounded-3" style="height: fit-content;"><i data-lucide="trophy"></i></div>
+                            <div>
+                                <h6 class="fw-bold mb-1">Prestige Wins Best Innovation Award</h6>
+                                <p class="small text-muted mb-0">Our students won 1st place at the Regional Tech Summit.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-white rounded-4 shadow-sm border-start border-5 border-success">
+                        <div class="d-flex gap-3">
+                            <div class="bg-navy-light text-navy p-2 rounded-3" style="height: fit-content;"><i data-lucide="briefcase"></i></div>
+                            <div>
+                                <h6 class="fw-bold mb-1">Campus Placement Drive</h6>
+                                <p class="small text-muted mb-0">Google and Microsoft scheduled for final year interviews next week.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ticker-wrapper mt-5 bg-navy rounded-4 p-3 d-flex align-items-center">
+                <span class="badge bg-gold me-3 py-2 px-3 flex-shrink-0">Updates</span>
+                <div class="ticker-content flex-grow-1 overflow-hidden">
+                    <div class="ticker-text text-white small opacity-90">
+                        ⚡ Spring 2024 Registration Deadline: Feb 28th &nbsp; | &nbsp; 
+                        🎓 Graduation Ceremony: March 15th at Main Auditorium &nbsp; | &nbsp; 
+                        💼 Record Breaking 95% Placement in 2023 &nbsp; | &nbsp;
+                        🌐 New IoT Research Lab Inaugurated in Block B
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5 bg-navy text-white position-relative">
+        <div class="container py-5">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-7">
+                    <span class="badge bg-white-20 text-gold mb-3 px-3 py-2">Join Our Legacy</span>
+                    <h2 class="display-4 fw-bold mb-4">Ready to Start Your <br><span class="text-gold">Engineering Journey?</span></h2>
+                    <p class="lead opacity-75 mb-5">Be part of an institution that believes in practical learning and global perspectives.</p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="#" class="btn btn-gold btn-lg px-5 py-3 fw-bold border-0">Apply Online</a>
+                        <a href="#" class="btn btn-outline-light btn-lg px-4 py-3">Download Catalog</a>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="stat-card-glass rounded-4 h-100">
+                                <h2 class="fw-bold text-gold">95%</h2>
+                                <p class="small mb-0 opacity-75">Placement Success</p>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stat-card-glass rounded-4 h-100">
+                                <h2 class="fw-bold text-gold">12L</h2>
+                                <p class="small mb-0 opacity-75">Avg Package</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+<footer class="footer-main mt-5">
+    <div class="footer-newsletter py-5">
+        <div class="container">
+            <div class="row align-items-center justify-content-between g-4">
+                <div class="col-md-6">
+                    <h3 class="fw-bold mb-2">Subscribe to Our Newsletter</h3>
+                    <p class="text-white-50 mb-0">Stay updated with latest news and announcements</p>
+                </div>
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <input type="email" class="form-control bg-white-20 border-white-20 text-white p-3" placeholder="Enter your email" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
+                        <button class="btn btn-warning px-4"><i data-lucide="send"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container py-5">
+        <div class="row g-5">
+            <div class="col-lg-3 col-md-6">
+                <div class="d-flex align-items-center gap-3 mb-4">
+                    <div class="p-2 bg-white-20 rounded-3">
+                        <i data-lucide="graduation-cap" class="text-gold" style="width: 32px; height: 32px;"></i>
+                    </div>
+                    <div>
+                        <h4 class="h5 fw-bold mb-0">Prestige Institute</h4>
+                        <p class="small text-white-50 mb-0">OF ENGINEERING & TECHNOLOGY</p>
+                    </div>
+                </div>
+                <p class="text-white-50 small mb-4">Empowering minds, shaping futures. A premier institution committed to excellence in engineering education since 1985.</p>
+                <div class="d-flex gap-2">
+                    <a href="#" class="social-btn"><i data-lucide="facebook" size="18"></i></a>
+                    <a href="#" class="social-btn"><i data-lucide="twitter" size="18"></i></a>
+                    <a href="#" class="social-btn"><i data-lucide="instagram" size="18"></i></a>
+                    <a href="#" class="social-btn"><i data-lucide="linkedin" size="18"></i></a>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <h5 class="fw-bold mb-4 d-flex align-items-center gap-2">
+                    <span class="footer-heading-line"></span> Quick Links
+                </h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a href="/about" class="footer-link">About Us</a></li>
+                    <li class="mb-2"><a href="/courses" class="footer-link">Courses</a></li>
+                    <li class="mb-2"><a href="/admissions" class="footer-link">Admissions</a></li>
+                    <li class="mb-2"><a href="/faculty" class="footer-link">Faculty</a></li>
+                    <li class="mb-2"><a href="/contact" class="footer-link">Contact Us</a></li>
+                </ul>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <h5 class="fw-bold mb-4 d-flex align-items-center gap-2">
+                    <span class="footer-heading-line"></span> Popular Courses
+                </h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a href="/courses" class="footer-link">Computer Science</a></li>
+                    <li class="mb-2"><a href="/courses" class="footer-link">Mechanical Engineering</a></li>
+                    <li class="mb-2"><a href="/courses" class="footer-link">Electrical Engineering</a></li>
+                    <li class="mb-2"><a href="/courses" class="footer-link">Civil Engineering</a></li>
+                </ul>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <h5 class="fw-bold mb-4 d-flex align-items-center gap-2">
+                    <span class="footer-heading-line"></span> Contact Us
+                </h5>
+                <ul class="list-unstyled text-white-50 small">
+                    <li class="d-flex gap-3 mb-3">
+                        <i data-lucide="map-pin" class="text-gold flex-shrink-0"></i>
+                        <span>123 University Avenue, Tech City, State 456789</span>
+                    </li>
+                    <li class="d-flex gap-3 mb-3">
+                        <i data-lucide="phone" class="text-gold flex-shrink-0"></i>
+                        <span>+1 (555) 123-4567</span>
+                    </li>
+                    <li class="d-flex gap-3 mb-3">
+                        <i data-lucide="mail" class="text-gold flex-shrink-0"></i>
+                        <span>info@prestigetech.edu</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="border-top border-white-20 py-4 mt-4">
+        <div class="container text-center text-md-start">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="small text-white-50 mb-0">© 2024 Prestige Institute of Engineering & Technology. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end mt-3 mt-md-0">
+                    <a href="#" class="small text-white-50 text-decoration-none me-3 hover-gold">Privacy Policy</a>
+                    <a href="#" class="small text-white-50 text-decoration-none">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<div class="col-md-6 text-md-end mt-3 mt-md-0">
+    <a href="#" class="small text-white-50 text-decoration-none me-3 hover-gold">Privacy Policy</a>
+    <a href="/admin" class="small text-white-50 text-decoration-none"><i data-lucide="lock" size="12" class="me-1"></i>Staff Login</a>
+</div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Refresh icons on carousel slide (if needed)
+        const myCarousel = document.getElementById('heroCarousel');
+        myCarousel.addEventListener('slid.bs.carousel', () => {
+            lucide.createIcons();
+        });
+        window.addEventListener('scroll', function() {
+            const nav = document.getElementById('mainNav');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html>

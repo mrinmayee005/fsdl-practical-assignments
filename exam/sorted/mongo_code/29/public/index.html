@@ -1,0 +1,47 @@
+<!--29. Develop a Student Record Management System to store and retrieve student details (Name, Roll No, Branch) using MongoDB.-->
+
+<!DOCTYPE html>
+<html>
+<body>
+
+<form id="f">
+
+    <input id="n" placeholder="name">
+    <input id="em" placeholder="email">
+    <button>Save</button>
+    <button type="button" onclick="load()">Show</button>
+</form>
+<div id="d"></div>
+
+<script>
+    let n=document.getElementById("n");
+    let em=document.getElementById("em");
+    let f=document.getElementById("f");
+    let d=document.getElementById("d");
+
+    f.onsubmit=async x=>{
+        x.preventDefault();
+
+        await fetch("/s",{
+            method:"POST",
+            headers: {"Content-Type":"application/json"},
+            body:  JSON.stringify({
+                name:n.value,
+                email:em.value
+            })
+        });
+   f.reset();
+    };
+async function load() {
+    let r=await fetch("/g");
+    let data=await r.json();
+
+    d.innerHTML=data.map(x=>
+        x.name+"-"+x.email
+    ).join("<br>");
+    
+}
+
+</script>
+</body>
+</html>

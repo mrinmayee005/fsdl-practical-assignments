@@ -1,0 +1,33 @@
+<!-- Digital Glossary: Create a dynamic table that filters HTML formatting tags in real-time as the user types in a search bar. Interactive Frontend JavaScript-->
+
+<html>
+    <head>
+        <title>
+            Digital Glossary
+        </title>
+    </head>
+    <body>
+        <input type="text" id="search" placeholder="Search Tag.."   onkeyup="fliterTag()">
+        <table border="1" id="table">
+            <tr> <th>Tag</th> <th>Description</th></tr>
+            <tr> <td> &lt;b&gt;</td><td>Bold Text</td></tr>
+            <tr><td>&lt;i&gt;</td><td>Italic text</td></tr>
+            <tr><td>&lt;u&gt;</td><td>Underline text</td></tr>
+            <tr><td>&lt;p&gt;</td><td>Paragraph</td></tr>
+            <tr><td>&lt;a&gt;</td><td>Link</td></tr>
+        </table>
+
+        <script>
+            function fliterTag()
+            {
+                let input=document.getElementById("search").value.toLowerCase();
+                let rows=document.querySelectorAll("#table tr");
+
+                for(let i=1;i<rows.length;i++){
+                    let text=rows[i].innerText.toLowerCase();
+                    rows[i].style.display=text.includes(input)? "":"none";
+                }
+            }
+        </script>
+    </body>
+</html>

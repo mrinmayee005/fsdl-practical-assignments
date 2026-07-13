@@ -1,0 +1,65 @@
+<!--10. Develop an FAQ Accordion where clicking a question expands/collapses the answer section-->
+
+<html>
+    <head><title>FAQ</title>
+    <style>
+        body{
+            font-family: Arial;
+            background: whitesmoke;
+            padding:20px;
+        }
+
+        .container{
+            width:300px;
+            margin:auto;
+        }
+
+        .q{
+            background: #007bff;
+            color: white;
+            padding:10px;
+            margin:5px 0;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+     .q:hover{
+        background: #0056b3;
+     }
+
+     .a{
+        display:none;
+        padding: 10px;
+        background: white;
+        border:1px solid #ddd;
+        border-radius:5px;
+     }
+    </style>
+    
+    </head>
+   
+    <body>
+        <div class="container">
+            <div class="q" onclick="t(this)">What is HTML</div>
+            <div class="a" >HTML is a markup language</div>
+
+             <div class="q" onclick="t(this)">What is CSS?</div>
+  <div class="a">CSS styles web pages</div>
+
+  <div class="q" onclick="t(this)">What is JS?</div>
+  <div class="a">JS adds interactivity</div>
+
+</div>
+
+<script>
+    function t(e)
+    {
+        document.querySelectorAll(".a").forEach(d=>
+            d.style.display="none");
+       let a=e.nextElementSibling;
+       a.style.display=(a.style.display=="block")?"none":"block";
+        
+    }
+</script>
+    </body>
+</html>
+

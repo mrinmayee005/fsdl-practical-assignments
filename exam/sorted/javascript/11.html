@@ -1,0 +1,111 @@
+<!--11. Create a Shopping Cart System where users can increase/decrease product quantity and the total price updates automatically.
+
+<html>
+    <body>
+        <h3>Shopping Cart</h3>
+
+        <p>Product A ($10)</p>
+        <button onclick="chg(0,-1)">-</button>
+        <span id="q0">0</span>
+        <button onclick="chg(0,1)">+</button>
+        
+        
+        <p>Product B ($20)</p>
+        <button onclick="chg(1,-1)">-</button>
+        <span id="q1">0</span>
+        <button onclick="chg(1,1)">+</button>
+        
+        <h4>Total:$<span id="t">0</span></h4>
+
+        <script>
+            let  q=[0,0], p=[10,20];
+
+            function chg(i,v)
+            {
+                q[i]=Math.max(0,q[i]+v);
+                document.getElementById("q"+i).innerText=q[i];
+                document.getElementById("t").innerText=q[0]*p[0]+q[1]*p[1];
+            }
+
+        </script>
+    </body>
+</html>
+
+-->
+
+
+<html>
+    <head>
+        <title>Shopping cart</title>
+        <style>
+  body{
+    font-family: Arial, Helvetica, sans-serif;
+    background: whitesmoke;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .item{
+    background: white;
+    padding: 10px;
+    margin :10px auto;
+    width: 220px;
+    border-radius: 8px;
+
+  }
+
+  button{
+    padding: 5px 10px;
+    margin:5px;
+    border: none;
+    background: #007bff;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  button:hover{
+    background: #0056b3;
+  }
+
+  span{
+    font-weight: bold;
+    margin: 0 10px;
+  }
+
+  .total{
+    margin-top: 15px;
+    font-size: 18px;
+  }
+        </style>
+    </head>
+
+    <body>
+<h3>Shopping cart</h3>
+
+        <div class="item">
+            <p> Product A ($10)</p>
+            <button onclick="chg(0,-1)">-</button>
+            <span id="q0">0</span>
+            <button onclick="chg(0,1)">+</button> 
+        </div>
+
+         <div class="item">
+            <p> Product B ($20)</p>
+            <button onclick="chg(1,-1)">-</button>
+            <span id="q1">0</span>
+            <button onclick="chg(1,1)">+</button> 
+        </div>
+
+
+        <h4 class="total">Total:$<span id="t">0</span></h4>
+    </body>
+
+    <script>
+        let q=[0,0],p=[10,20];
+
+        function chg(i,v){
+            q[i]=Math.max(0,q[i]+v);
+            document.getElementById("q"+i).innerText=q[i];
+            document.getElementById("t").innerText=q[0]*p[0]+q[1]*p[1];
+        }
+    </script>
+</html>

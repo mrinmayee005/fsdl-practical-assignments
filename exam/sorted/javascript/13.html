@@ -1,0 +1,102 @@
+<!--13. Build a To-Do List Application that allows users to add and delete tasks dynamically.
+
+<html>
+    <h3> To Do list</h3>
+
+    <input id="i" placeholder="Task">
+    <button onclick="add()">ADD</button>
+
+    <ul id="l"></ul>
+
+    <script>
+        function add()
+        {
+            let v=document.getElementById("i").value;
+            if(!v) return;
+
+            let li=document.createElement("li");
+            li.innerHTML=v+ '<button onclick="this.parentElement.remove()"> Delete</button>';
+            document.getElementById('l').appendChild(li);
+            document.getElementById('i').value="";
+            
+        }
+    </script>
+
+</html>-->
+
+<html>
+    <head><title>todo list</title></head>
+
+    <style>
+ body{
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 20px;
+    background: whitesmoke;
+    text-align: center;
+ }
+
+ input{
+    padding:8px;
+    width:200px;
+ }
+ button {
+  padding: 8px 10px;
+  margin-left: 5px;
+  border: none;
+  background: #007bff;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0056b3;
+}
+
+ul{
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+li{
+    background: white;
+    padding: 8px;
+    margin: 5px auto;
+    width:250px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+}
+li button{
+    background: red;
+    
+}
+li button:hover{
+    background: darkred;
+}
+
+    </style>
+
+    <body>
+        <h3>TO DO LIST</h3>
+        <input id="i" placeholder="Task">
+        <button onclick="add()">ADD</button>
+
+        <ul id="l"></ul>
+
+        <script>
+            function add()
+            {
+                let v=document.getElementById("i").value;
+                if(!v) return;
+
+                let li=document.createElement("li");
+                li.innerHTML=v+ '<button onclick="this.parentElement.remove()">Delete</button>';
+                document.getElementById('l').appendChild(li);
+                document.getElementById('i').value="";
+            }
+        </script>
+    </body>
+
+</html>

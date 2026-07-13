@@ -1,0 +1,64 @@
+<!--22. Design a Blog Layout consisting of header, sidebar, content area, and footer using CSS layout techniques.-->
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+}
+
+header, footer{
+  background:#333;
+  color:white;
+  text-align:center;
+  padding:15px;
+}
+
+.container{
+  display:flex;
+  min-height:80vh;
+}
+
+.sidebar{
+  width:25%;
+  background:#f2f2f2;
+  padding:15px;
+}
+
+.content{
+  width:75%;
+  padding:15px;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+  <h2>My Blog</h2>
+</header>
+
+<div class="container">
+
+  <div class="sidebar">
+    <h3>Sidebar</h3>
+    <p>Links</p>
+    <p>Categories</p>
+  </div>
+
+  <div class="content">
+    <h3>Blog Post</h3>
+    <p>This is the main content area of the blog.</p>
+  </div>
+
+</div>
+
+<footer>
+  <p>Footer Section</p>
+</footer>
+
+</body>
+</html>

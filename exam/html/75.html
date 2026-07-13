@@ -1,0 +1,57 @@
+<!--75	Display travel packages with pricing and images .	Static Frontend UI-->
+<html>
+    <style>
+        body{font-family:sans-serif;text-align:center;background:#eee}
+      .cards{display:flex;gap: 20px; justify-content: center;flex-wrap:wrap}
+      .card{
+        background: white;
+        padding:20px;
+        width:250px;
+        border-radius: 10px;
+        box-shadow: 0 0 5px #ccc;
+      }
+
+      button{
+        background: blue;
+        color:white;
+        border:none; padding:10px;
+        cursor:pointer;
+      }
+
+
+      @media(max-width:600px){
+        .cards{flex-direction:column ;align-items:center}
+      }
+   
+   </style>
+
+   <body>
+    <h2>🌍 Travel Packages</h2>
+
+<div class="cards">
+
+<div class="card">
+  <h3>Goa Beach</h3>
+  <p>Enjoy sunny beaches</p>
+  <p><b>₹15,000</b></p>
+  <button>Book Now</button>
+</div>
+
+<div class="card">
+  <h3>Manali Hills</h3>
+  <p>Snow & adventure</p>
+  <p><b>₹20,000</b></p>
+  <button>Book Now</button>
+</div>
+
+<div class="card">
+  <h3>Dubai City</h3>
+  <p>Luxury lifestyle</p>
+  <p><b>₹50,000</b></p>
+  <button>Book Now</button>
+</div>
+
+</div>
+
+   </body>
+</html>

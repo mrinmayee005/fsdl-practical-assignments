@@ -1,0 +1,197 @@
+<!--23. Create a Personal Portfolio Webpage with sections: About, Skills, Projects, and Contact.-->
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body{
+  font-family:Arial;
+  margin:0;
+  background:#f4f4f4;
+}
+
+nav{
+  background:#333;
+  color:white;
+  text-align:center;
+  padding:10px;
+}
+
+section{
+  max-width:700px;
+  margin:20px auto;
+  background:white;
+  padding:15px;
+  border-radius:8px;
+  box-shadow:0 0 10px #ccc;
+}
+
+h2{
+  border-left:4px solid #333;
+  padding-left:8px;
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+  <h2>My Portfolio</h2>
+</nav>
+
+<section>
+  <h2>About</h2>
+  <p>I am a Computer Engineering student learning web development.</p>
+</section>
+
+<section>
+  <h2>Skills</h2>
+  <ul>
+    <li>HTML</li>
+    <li>CSS</li>
+    <li>JavaScript</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Projects</h2>
+  <p>Mini web development projects using HTML, CSS, JS.</p>
+</section>
+
+<section>
+  <h2>Contact</h2>
+  <p>Email: example@gmail.com</p>
+  <p>Phone: 1234567890</p>
+</section>
+
+</body>
+</html>
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body{
+  font-family:Arial;
+  margin:0;
+  background:#f4f4f4;
+}
+
+/* NAVBAR */
+nav{
+  background:#333;
+  color:white;
+  text-align:center;
+  padding:15px;
+  position:sticky;
+  top:0;
+}
+
+nav a{
+  color:white;
+  margin:0 10px;
+  text-decoration:none;
+  cursor:pointer;
+}
+
+nav a.active{
+  color:#00d4ff;
+  font-weight:bold;
+}
+
+/* SECTIONS */
+section{
+  max-width:700px;
+  margin:20px auto;
+  background:white;
+  padding:15px;
+  border-radius:8px;
+  box-shadow:0 0 10px #ccc;
+}
+
+h2{
+  border-left:4px solid #333;
+  padding-left:8px;
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+  <h2>My Portfolio</h2>
+  <div>
+    <a onclick="scrollToSection('about')" id="link-about">About</a>
+    <a onclick="scrollToSection('skills')" id="link-skills">Skills</a>
+    <a onclick="scrollToSection('projects')" id="link-projects">Projects</a>
+    <a onclick="scrollToSection('contact')" id="link-contact">Contact</a>
+  </div>
+</nav>
+
+<section id="about">
+  <h2>About</h2>
+  <p>I am a Computer Engineering student learning web development.</p>
+</section>
+
+<section id="skills">
+  <h2>Skills</h2>
+  <ul>
+    <li>HTML</li>
+    <li>CSS</li>
+    <li>JavaScript</li>
+  </ul>
+</section>
+
+<section id="projects">
+  <h2>Projects</h2>
+  <p>Mini web development projects using HTML, CSS, JS.</p>
+</section>
+
+<section id="contact">
+  <h2>Contact</h2>
+  <p>Email: example@gmail.com</p>
+  <p>Phone: 1234567890</p>
+</section>
+
+<script>
+
+// Smooth scroll
+function scrollToSection(id){
+  document.getElementById(id).scrollIntoView({
+    behavior: "smooth"
+  });
+
+  setActive(id);
+}
+
+// Highlight active link
+function setActive(id){
+  let links = ["about","skills","projects","contact"];
+
+  links.forEach(link => {
+    document.getElementById("link-" + link).classList.remove("active");
+  });
+
+  document.getElementById("link-" + id).classList.add("active");
+}
+
+// Optional: highlight section on scroll
+window.addEventListener("scroll", () => {
+  let sections = ["about","skills","projects","contact"];
+
+  sections.forEach(sec => {
+    let element = document.getElementById(sec);
+    let rect = element.getBoundingClientRect();
+
+    if(rect.top >= 0 && rect.top < 200){
+      setActive(sec);
+    }
+  });
+});
+
+</script>
+
+</body>
+</html>

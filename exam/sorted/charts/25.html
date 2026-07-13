@@ -1,0 +1,31 @@
+<!--25. Create a Bar Chart to visualize the number of students in different departments using static data.-->
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<h3 style="text-align:center;">Student Bar Chart</h3>
+
+<canvas id="myChart"></canvas>
+
+<script>
+const ctx = document.getElementById("myChart");
+
+new Chart(ctx, {
+  type: "bar",
+  data: {
+    labels: ["CSE", "IT", "ENTC", "MECH"],
+    datasets: [{
+      label: "No. of Students",
+      data: [120, 150, 80, 100],
+      backgroundColor: "gray"
+    }]
+  }
+});
+</script>
+
+</body>
+</html>

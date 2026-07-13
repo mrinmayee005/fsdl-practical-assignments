@@ -1,0 +1,41 @@
+<!-- 66	Design a responsive navbar with a hamburger menu.	Static Frontend UI-->
+
+<html>
+    <head>
+        <title>hamburger</title>
+    </head>
+<style>
+    .nav{background:black;color:white;padding:10px}
+    .links{display:flex;gap:10px}
+    .menu{display:none;cursor:pointer}
+
+    @media(max-width:600px){
+        .links{display:none;flex-direction:column}
+        .show{display:flex}
+        .menu{display:block}
+    }
+</style>
+    <body>
+        <div class="nav">
+            <span class="logo">Logo</span>
+            <span class="menu" onclick="toggle()">☰</span>
+            <div class="links" id="links">
+                <a href="#">Home</a>
+                <a href="#">About</a>
+            </div>
+        </div>
+
+        <div class="Home">
+            <h1>Home</h1>
+        </div>
+        
+        <div class="about">
+            <h1>about</h1>
+        </div>
+ <script>
+    function toggle(){
+        document.getElementById("links").classList.toggle("show");
+    }
+ </script>
+    </body>
+</html>

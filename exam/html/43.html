@@ -1,0 +1,36 @@
+<!-- 
+43	Design a photo gallery with at least 6 images and apply hover zoom effect.	
+Static Frontend UI
+-->
+
+
+<html>
+    <head>
+        <title>Photo gallery</title>
+
+        <style>
+            .gallery{
+                display: flex;
+                gap:10px;
+                flex-wrap:wrap;
+            }
+            img{
+                width:200px;
+                transition:0.3s;
+            }
+            img:hover{
+                transform:scale(1.2);
+            }
+        </style>
+    </head>
+     <body>
+    <div class="gallery">
+        <img src="https://picsum.photos/200?1">
+        <img src="https://picsum.photos/200?2">
+        <img src="https://picsum.photos/200?3">
+        <img src="https://picsum.photos/200?4">
+        <img src="https://picsum.photos/200?5">
+        <img src="https://picsum.photos/200?6">
+        </body>
+    </div>
+</html>

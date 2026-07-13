@@ -1,0 +1,123 @@
+<!--1. Develop a Digital Glossary that displays HTML formatting tags in a table and allows users to filter the content dynamically using a search bar.-->
+<html>
+    <head>
+        <title>Formating tag</title>
+
+        <style>
+            body{
+                font-family: Arial, Helvetica, sans-serif;
+                background-color: lightgoldenrodyellow;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height:100vh;
+            }
+            .container{
+                background: #fff;
+                padding: 20px 25px;
+                border-radius: 10px;
+                box-shadow: 0 4px 10px lightgray;
+                width:350px;
+            }
+            h2{
+                text-align: center;
+                margin-bottom: 15px;
+                color:#333;
+            }
+
+            input{
+                width:70%;
+                padding:8px;
+                border:1px solid #ccc;
+                border-radius: 1px solid;
+                outline: none;
+            }
+            input:focus{
+                border-color:#007bff
+            }
+            button{
+                padding: 8px 12px;
+                border:none;
+                background:lightskyblue;
+                color:black;
+                border-radius: 5px;
+                cursor:pointer;
+                margin-left: 10px;
+            }
+            button:hover{
+                background:rgba(34, 104, 234, 0.915)
+            }
+
+            table,tr,td{
+                border:1px solid black;
+                border-collapse: collapse;
+                text-align: center;
+                width:70%;
+                margin-top:15px;
+
+            }
+
+            th{
+                background: #007bff;
+                color:white
+            }
+            tr:nth-child(even)
+            {
+                background: #f9f9f9;
+            }
+            tr:nth-child(odd)
+            {
+                background:  #e6f0ff;
+            }
+            
+        </style>
+    </head>
+
+    <body>
+        <div class="container">
+            <h2>Html tags</h2>
+        <input type="text" id="search" placeholder="enter tag">
+        <button onclick="searchtag()" >search</button>
+        <table id="table">
+            <tr>
+                <th>Tag</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>&lt;b&gt;</td>
+                <td><b>bold</b></td>
+            </tr>
+                        <tr>
+                <td>&lt;i&gt;</td>
+                <td><i>italic</i></td>
+            </tr>
+
+                        <tr>
+                <td>&lt;u&gt;</td>
+                <td><u>Underline</u></td>
+            </tr>
+
+                        <tr>
+                <td>&lt;mark&gt;</td>
+                <td>mark</td>
+            </tr>
+            
+        </table>
+</div>
+        <script>
+            function searchtag()
+            {
+                let input=document.getElementById("search").value.toLowerCase();
+                let rows=document.querySelectorAll("#table tr");
+
+                for(let i=1;i<rows.length;i++)
+            {
+                let text=rows[i].innerText.toLowerCase();
+                rows[i].style.display=text.includes(input)?"":"none";
+
+            }
+                
+            }
+        </script>
+    </body>
+</html>

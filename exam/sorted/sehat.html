@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SehatSaathi AI</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1967D2', // Exact blue from mockup
+                        secondary: '#FFFFFF',
+                        background: '#F4F7FB', // Light gray/blue bg
+                        danger: '#E53935',
+                        warning: '#FFB300',
+                        success: '#43A047',
+                        textMain: '#1E293B',
+                        textMuted: '#64748B',
+                        cardBorder: '#E2E8F0'
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'nav': '0 -4px 20px -2px rgba(0, 0, 0, 0.05)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body { background-color: #e5e7eb; font-family: system-ui, -apple-system, sans-serif; margin: 0; padding: 0; }
+        .mobile-container {
+            max-width: 390px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background-color: #F4F7FB;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        ::-webkit-scrollbar { display: none; }
+        .letter-spacing-widest { letter-spacing: 0.5em; }
+        
+        /* SOS Pulse Animation */
+        .pulse-red { animation: pulseRed 2s infinite; }
+        @keyframes pulseRed {
+            0% { box-shadow: 0 0 0 0 rgba(229, 57, 53, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(229, 57, 53, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(229, 57, 53, 0); }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        const apiKey = ""; // Injected by execution environment
+
+        // --- Icons Component ---
+        const Icon = ({ name, size = 24, className = "", color, fill }) => {
+            const containerRef = useRef(null);
+            useEffect(() => {
+                if (containerRef.current && window.lucide && window.lucide.icons[name]) {
+                    // Create a fresh inner element to avoid React tracking issues
+                    containerRef.current.innerHTML = `<i data-lucide="${name}"></i>`;
+                    window.lucide.createIcons({
+                        icons: { [name]: window.lucide.icons[name] },
+                        root: containerRef.current, // Constrain Lucide to only this container
+                        nameAttr: 'data-lucide',
+                        attrs: { 
+                            class: className, 
+                            width: size, 
+                            height: size,
+                            ...(color ? { color } : {}),
+                            ...(fill ? { fill } : {})
+                        }
+                    });
+                }
+            }, [name, className, size, color, fill]);
+            return <span ref={containerRef} className="inline-flex items-center justify-center"></span>;
+        };
+
+        // --- Translations Dictionary ---
+        const translations = {
+            en: {
+                goodMorning: "Good Morning",
+                emergencyHelp: "Emergency Help",
+                quickActions: "Quick Actions",
+                scanPrescription: "Scan Prescription",
+                scanMedicine: "Scan Medicine",
+                scanReport: "Scan Report",
+                addReminder: "Add Reminder",
+                todaysReminders: "Today's Reminders",
+                noReminders: "No reminders yet. Add one!",
+                home: "Home",
+                reminders: "Reminders",
+                profile: "Profile",
+                enterPhone: "Enter Phone Number",
+                sendOtp: "Send OTP",
+                verifyOtp: "Verify OTP",
+                emergencyContact: "Emergency Contact",
+                enterEmergency: "Enter Emergency Contact",
+                continueBtn: "Continue",
+                medicineName: "Medicine Name",
+                frequency: "Frequency",
+                time: "Time",
+                stockCount: "Stock Count",
+                save: "Save",
+                taken: "Taken",
+                markTaken: "Mark Taken",
+                back: "Back",
+                aiAnalyzing: "AI is analyzing..."
+            },
+            hi: {
+                goodMorning: "शुभ प्रभात",
+                emergencyHelp: "आपातकालीन मदद",
+                quickActions: "त्वरित कार्रवाई",
+                scanPrescription: "पर्ची स्कैन करें",
+                scanMedicine: "दवा स्कैन करें",
+                scanReport: "रिपोर्ट स्कैन करें",
+                addReminder: "रिमाइंडर जोड़ें",
+                todaysReminders: "आज के रिमाइंडर",
+                noReminders: "कोई रिमाइंडर नहीं। एक जोड़ें!",
+                home: "होम",
+                reminders: "रिमाइंडर",
+                profile: "प्रोफ़ाइल",
+                enterPhone: "फोन नंबर दर्ज करें",
+                sendOtp: "OTP भेजें",
+                verifyOtp: "OTP सत्यापित करें",
+                emergencyContact: "आपातकालीन संपर्क",
+                enterEmergency: "आपातकालीन संपर्क दर्ज करें",
+                continueBtn: "जारी रखें",
+                medicineName: "दवा का नाम",
+                frequency: "कितनी बार",
+                time: "समय",
+                stockCount: "स्टॉक की संख्या",
+                save: "सेव करें",
+                taken: "ले लिया",
+                markTaken: "ले लिया गया",
+                back: "पीछे",
+                aiAnalyzing: "AI विश्लेषण कर रहा है..."
+            },
+            mr: {
+                goodMorning: "शुभ सकाळ",
+                emergencyHelp: "तातडीची मदत",
+                quickActions: "जलद कृती",
+                scanPrescription: "प्रिस्क्रिप्शन स्कॅन करा",
+                scanMedicine: "औषध स्कॅन करा",
+                scanReport: "अहवाल स्कॅन करा",
+                addReminder: "रिमाइंडर जोडा",
+                todaysReminders: "आजचे रिमाइंडर",
+                noReminders: "अद्याप कोणतेही रिमाइंडर नाही. एक जोडा!",
+                home: "होम",
+                reminders: "रिमाइंडर",
+                profile: "प्रोफाइल",
+                enterPhone: "फोन नंबर प्रविष्ट करा",
+                sendOtp: "OTP पाठवा",
+                verifyOtp: "OTP पडताळणी करा",
+                emergencyContact: "तातडीचा संपर्क",
+                enterEmergency: "तातडीचा संपर्क प्रविष्ट करा",
+                continueBtn: "पुढे जा",
+                medicineName: "औषधाचे नाव",
+                frequency: "वारंवारता",
+                time: "वेळ",
+                stockCount: "स्टॉकची संख्या",
+                save: "सेव्ह करा",
+                taken: "घेतले",
+                markTaken: "घेतल्याची नोंद करा",
+                back: "मागे",
+                aiAnalyzing: "AI विश्लेषण करत आहे..."
+            },
+            ta: {
+                goodMorning: "காலை வணக்கம்",
+                emergencyHelp: "அவசர உதவி",
+                quickActions: "விரைவான செயல்கள்",
+                scanPrescription: "மருந்து சீட்டை ஸ்கேன் செய்",
+                scanMedicine: "மருந்தை ஸ்கேன் செய்",
+                scanReport: "அறிக்கையை ஸ்கேன் செய்",
+                addReminder: "நினைவூட்டலைச் சேர்",
+                todaysReminders: "இன்றைய நினைவூட்டல்கள்",
+                noReminders: "நினைவூட்டல்கள் இல்லை. ஒன்றைச் சேர்க்கவும்!",
+                home: "முகப்பு",
+                reminders: "நினைவூட்டல்கள்",
+                profile: "சுயவிவரம்",
+                enterPhone: "தொலைபேசி எண்ணை உள்ளிடுக",
+                sendOtp: "OTP ஐ அனுப்பு",
+                verifyOtp: "OTP ஐ சரிபார்",
+                emergencyContact: "அவசரத் தொடர்பு",
+                enterEmergency: "அவசரத் தொடர்பை உள்ளிடவும்",
+                continueBtn: "தொடரவும்",
+                medicineName: "மருந்தின் பெயர்",
+                frequency: "அதிர்வெண்",
+                time: "நேரம்",
+                stockCount: "கையிருப்பு எண்ணிக்கை",
+                save: "சேமி",
+                taken: "எடுக்கப்பட்டது",
+                markTaken: "எடுக்கப்பட்டதாகக் குறி",
+                back: "பின்னே",
+                aiAnalyzing: "AI பகுப்பாய்வு செய்கிறது..."
+            },
+            bn: {
+                goodMorning: "সুপ্রভাত",
+                emergencyHelp: "জরুরী সাহায্য",
+                quickActions: "দ্রুত পদক্ষেপ",
+                scanPrescription: "প্রেসক্রিপশন স্ক্যান করুন",
+                scanMedicine: "ওষুধ স্ক্যান করুন",
+                scanReport: "রিপোর্ট স্ক্যান করুন",
+                addReminder: "রিমাইন্ডার যোগ করুন",
+                todaysReminders: "আজকের রিমাইন্ডার",
+                noReminders: "কোনো রিমাইন্ডার নেই। একটি যোগ করুন!",
+                home: "হোম",
+                reminders: "রিমাইন্ডার",
+                profile: "প্রোফাইল",
+                enterPhone: "ফোন নম্বর লিখুন",
+                sendOtp: "OTP পাঠান",
+                verifyOtp: "OTP যাচাই করুন",
+                emergencyContact: "জরুরী যোগাযোগ",
+                enterEmergency: "জরুরী যোগাযোগ লিখুন",
+                continueBtn: "চালিয়ে যান",
+                medicineName: "ওষুধের নাম",
+                frequency: "ফ্রিকোয়েন্সি",
+                time: "সময়",
+                stockCount: "স্টক সংখ্যা",
+                save: "সেভ করুন",
+                taken: "নেওয়া হয়েছে",
+                markTaken: "নেওয়া হয়েছে হিসেবে চিহ্নিত করুন",
+                back: "পেছনে",
+                aiAnalyzing: "AI বিশ্লেষণ করছে..."
+            }
+        };
+
+        const langNames = { en: "English", hi: "Hindi", mr: "Marathi", ta: "Tamil", bn: "Bengali" };
+
+        // --- Main App Component ---
+        function App() {
+            // State
+            const [view, setView] = useState('language'); // language, login, home, reminders, profile, addMed, scan
+            const [scanType, setScanType] = useState('medicine'); // new state to track scan category
+            const [lang, setLang] = useState('en');
+            const [user, setUser] = useState({ name: 'Manasvi Patil', phone: '+918446530525', emergencyContact: '+919876543210', age: 22, gender: 'Female' });
+            const [medicines, setMedicines] = useState([
+                { id: '1', medName: 'Cheston cold', dosage: '1 Tablet', frequency: 1, times: ['11:13'], stockCount: 1, taken: false }
+            ]);
+            const [alertModal, setAlertModal] = useState(null);
+
+            const t = translations[lang] || translations.en;
+
+            // Audio Context & Speech
+            const playSiren = () => {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                const ctx = new AudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(400, ctx.currentTime);
+                osc.frequency.linearRampToValueAtTime(800, ctx.currentTime + 0.5);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 2);
+                osc.stop(ctx.currentTime + 2);
+            };
+
+            const speak = (text) => {
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    window.speechSynthesis.speak(utterance);
+                }
+            };
+
+            const triggerSOS = () => {
+                playSiren();
+                setAlertModal({ title: "SOS Sent", msg: `Emergency contact (${user.emergencyContact || 'Not Set'}) and location have been notified via SMS.`, type: "danger" });
+            };
+
+            const handleTakeMed = (medId) => {
+                setMedicines(prev => prev.map(m => {
+                    if (m.id === medId) {
+                        const newStock = m.stockCount - 1;
+                        if (newStock <= 2 && newStock > 0) {
+                            setAlertModal({ title: "Running Low!", msg: `Only ${newStock} doses left. SMS sent to contact.`, type: "warning" });
+                        } else if (newStock === 0) {
+                            setAlertModal({ title: "Out of Stock!", msg: `Please restock immediately.`, type: "danger" });
+                        }
+                        return { ...m, stockCount: newStock, taken: true };
+                    }
+                    return m;
+                }));
+            };
+
+            const deleteMed = (medId) => {
+                setMedicines(prev => prev.filter(m => m.id !== medId));
+            };
+
+            // --- Sub-components (Screens) ---
+
+            const ViewLanguage = () => {
+                const languages = [
+                    { code: 'en', name: 'English', native: 'English', flag: '🇺🇸' },
+                    { code: 'hi', name: 'Hindi', native: 'हिंदी', flag: '🇮🇳' },
+                    { code: 'mr', name: 'Marathi', native: 'मराठी', flag: '🇮🇳' },
+                    { code: 'ta', name: 'Tamil', native: 'தமிழ்', flag: '🇮🇳' },
+                    { code: 'bn', name: 'Bengali', native: 'বাংলা', flag: '🇮🇳' }
+                ];
+
+                return (
+                    <div className="flex-1 bg-background flex flex-col">
+                        <div className="bg-primary text-white pt-12 pb-8 px-6 rounded-b-[32px] text-center shadow-md">
+                            <h1 className="text-[26px] font-bold mb-1">Select Language</h1>
+                            <p className="text-blue-100 text-[15px]">Choose your preferred language</p>
+                        </div>
+                        <div className="px-5 py-6 space-y-4 overflow-y-auto">
+                            {languages.map(l => (
+                                <button 
+                                    key={l.code}
+                                    onClick={() => { setLang(l.code); setView('login'); }}
+                                    className={`w-full flex items-center p-4 rounded-2xl border ${lang === l.code ? 'bg-primary text-white border-primary shadow-md' : 'bg-white text-textMain border-gray-200'} transition-all`}
+                                >
+                                    <span className="text-3xl mr-4">{l.flag}</span>
+                                    <div className="text-left">
+                                        <div className={`text-xl font-bold ${lang === l.code ? 'text-white' : 'text-gray-900'}`}>{l.native}</div>
+                                        <div className={`text-sm ${lang === l.code ? 'text-blue-100' : 'text-gray-500'}`}>{l.name}</div>
+                                    </div>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                );
+            };
+
+            const ViewLogin = () => {
+                const [step, setStep] = useState(1);
+                const [phone, setPhone] = useState('');
+                const [otp, setOtp] = useState('');
+                const [emContact, setEmContact] = useState('');
+
+                const handleSendOtp = () => {
+                    if (!/^\d{10}$/.test(phone)) {
+                        setAlertModal({ title: "Invalid Input", msg: "Please enter a valid 10-digit phone number.", type: "warning" });
+                        return;
+                    }
+                    setStep(2);
+                };
+
+                const handleVerifyOtp = () => {
+                    if (otp !== '12345') {
+                        setAlertModal({ title: "Invalid OTP", msg: "Please enter the correct OTP (12345).", type: "danger" });
+                        return;
+                    }
+                    setStep(3);
+                };
+
+                const completeLogin = () => {
+                    if (!/^\d{10}$/.test(emContact)) {
+                        setAlertModal({ title: "Invalid Input", msg: "Please enter a valid 10-digit emergency contact number.", type: "warning" });
+                        return;
+                    }
+                    if (emContact === phone) {
+                        setAlertModal({ title: "Invalid Input", msg: "Emergency contact must be different from your primary phone number.", type: "warning" });
+                        return;
+                    }
+                    setUser(prev => ({
+                        ...prev, 
+                        phone: phone ? `+91${phone}` : prev.phone, 
+                        emergencyContact: emContact ? `+91${emContact}` : prev.emergencyContact 
+                    }));
+                    setView('home');
+                };
+
+                return (
+                    <div className="flex-1 bg-primary flex flex-col items-center pt-16 px-6 relative">
+                        <div className="w-20 h-20 rounded-full border-2 border-white flex items-center justify-center mb-4">
+                            <Icon name="Heart" size={40} className="text-white" fill="white" />
+                        </div>
+                        <h1 className="text-3xl font-bold text-white mb-1">SehatSaathi AI</h1>
+                        <p className="text-blue-100 text-lg mb-10">Your AI Health Companion</p>
+
+                        <div className="bg-white w-full rounded-[32px] p-6 shadow-2xl">
+                            {step === 1 ? (
+                                <>
+                                    <div className="flex items-center gap-2 mb-6 text-primary cursor-pointer" onClick={() => setView('language')}>
+                                        <Icon name="ArrowLeft" size={20} /> <span className="font-semibold text-lg">{t.back}</span>
+                                    </div>
+                                    <h2 className="text-2xl font-bold text-textMain mb-2">{t.enterPhone}</h2>
+                                    <p className="text-textMuted mb-6">We will send an OTP to verify.</p>
+                                    <div className="flex items-center bg-blue-50 rounded-2xl border border-blue-100 p-4 mb-6">
+                                        <span className="text-gray-500 font-bold mr-2">+91</span>
+                                        <input type="tel" value={phone} onChange={e=>setPhone(e.target.value)} className="bg-transparent outline-none flex-1 text-xl font-semibold text-gray-800" placeholder="8766901254" />
+                                    </div>
+                                    <button onClick={handleSendOtp} className="w-full bg-primary text-white py-4 rounded-2xl font-bold text-lg shadow-md">
+                                        {t.sendOtp}
+                                    </button>
+                                </>
+                            ) : step === 2 ? (
+                                <>
+                                    <div className="flex items-center gap-2 mb-6 text-primary cursor-pointer" onClick={() => setStep(1)}>
+                                        <Icon name="ArrowLeft" size={20} /> <span className="font-semibold text-lg">{t.back}</span>
+                                    </div>
+                                    <h2 className="text-2xl font-bold text-textMain mb-2">{t.verifyOtp}</h2>
+                                    <p className="text-textMuted mb-6">Sent to +91 {phone || '8766901254'}</p>
+                                    <input 
+                                        type="text" 
+                                        value={otp} 
+                                        onChange={e=>setOtp(e.target.value)}
+                                        className="w-full bg-blue-50 border border-blue-100 rounded-2xl p-4 text-center text-3xl font-bold tracking-[0.3em] mb-6 outline-none text-gray-800"
+                                        placeholder="12345"
+                                        maxLength="5"
+                                    />
+                                    <button onClick={handleVerifyOtp} className="w-full bg-primary text-white py-4 rounded-2xl font-bold text-lg shadow-md">
+                                        {t.verifyOtp}
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <div className="flex items-center gap-2 mb-6 text-primary cursor-pointer" onClick={() => setStep(2)}>
+                                        <Icon name="ArrowLeft" size={20} /> <span className="font-semibold text-lg">{t.back}</span>
+                                    </div>
+                                    <h2 className="text-2xl font-bold text-textMain mb-2">{t.enterEmergency}</h2>
+                                    <p className="text-textMuted mb-6">We'll notify them in case of SOS.</p>
+                                    <div className="flex items-center bg-red-50 rounded-2xl border border-red-100 p-4 mb-6">
+                                        <span className="text-danger font-bold mr-2">+91</span>
+                                        <input type="tel" value={emContact} onChange={e=>setEmContact(e.target.value)} className="bg-transparent outline-none flex-1 text-xl font-semibold text-gray-800" placeholder="9876543210" />
+                                    </div>
+                                    <button onClick={completeLogin} className="w-full bg-danger text-white py-4 rounded-2xl font-bold text-lg shadow-md">
+                                        {t.continueBtn}
+                                    </button>
+                                </>
+                            )}
+                        </div>
+
+                        <div className="absolute bottom-8 flex items-center gap-2 text-white/80 cursor-pointer" onClick={() => setView('language')}>
+                            <Icon name="Globe" size={20} />
+                            <span>Change Language</span>
+                        </div>
+                    </div>
+                );
+            };
+
+            const BottomNav = () => (
+                <div className="bg-white border-t border-gray-200 flex justify-around items-center pb-6 pt-3 px-2 shadow-nav sticky bottom-0 z-50">
+                    <button onClick={() => setView('home')} className={`flex flex-col items-center gap-1 ${view==='home' ? 'text-primary' : 'text-gray-400'}`}>
+                        <Icon name="Home" size={24} fill={view==='home'?'currentColor':'none'} />
+                        <span className="text-xs font-semibold">{t.home}</span>
+                    </button>
+                    <button onClick={() => setView('reminders')} className={`flex flex-col items-center gap-1 ${view==='reminders' ? 'text-primary' : 'text-gray-400'}`}>
+                        <Icon name="Bell" size={24} fill={view==='reminders'?'currentColor':'none'} />
+                        <span className="text-xs font-semibold">{t.reminders}</span>
+                    </button>
+                    <button onClick={() => setView('profile')} className={`flex flex-col items-center gap-1 ${view==='profile' ? 'text-primary' : 'text-gray-400'}`}>
+                        <Icon name="User" size={24} fill={view==='profile'?'currentColor':'none'} />
+                        <span className="text-xs font-semibold">{t.profile}</span>
+                    </button>
+                </div>
+            );
+
+            const ViewHome = () => (
+                <div className="flex-1 flex flex-col bg-background pb-4 overflow-y-auto">
+                    {/* Header */}
+                    <div className="bg-primary text-white px-6 py-5 rounded-b-[24px] flex justify-between items-center shadow-sm">
+                        <div>
+                            <p className="text-blue-100 text-sm">{t.goodMorning},</p>
+                            <h1 className="text-2xl font-bold">{user.name}</h1>
+                        </div>
+                        <button onClick={() => speak(`Good Morning, ${user.name}. You have ${medicines.filter(m=>!m.taken).length} medicines due.`)} className="bg-white/20 p-3 rounded-full backdrop-blur-sm">
+                            <Icon name="Volume2" size={24} />
+                        </button>
+                    </div>
+
+                    {/* SOS Section */}
+                    <div className="flex flex-col items-center mt-6 mb-4">
+                        <button onClick={triggerSOS} className="w-[84px] h-[84px] bg-danger rounded-full flex flex-col items-center justify-center text-white shadow-lg pulse-red active:scale-95 transition-transform">
+                            <Icon name="AlertTriangle" size={32} />
+                            <span className="font-bold text-sm mt-1">SOS</span>
+                        </button>
+                        <span className="text-danger font-bold mt-2 text-[15px]">{t.emergencyHelp}</span>
+                    </div>
+
+                    {/* Quick Actions */}
+                    <div className="px-5 mb-6">
+                        <h2 className="text-[17px] font-bold text-gray-800 mb-3">{t.quickActions}</h2>
+                        <div className="grid grid-cols-2 gap-3">
+                            <button onClick={() => { setScanType('prescription'); setView('scan'); }} className="bg-white p-4 rounded-[20px] shadow-sm flex flex-col items-center gap-3 border border-gray-100">
+                                <div className="w-14 h-14 rounded-full bg-blue-50 text-primary flex items-center justify-center"><Icon name="Camera" size={28} /></div>
+                                <span className="font-semibold text-gray-800 text-[15px]">{t.scanPrescription}</span>
+                            </button>
+                            <button onClick={() => { setScanType('medicine'); setView('scan'); }} className="bg-white p-4 rounded-[20px] shadow-sm flex flex-col items-center gap-3 border border-gray-100">
+                                <div className="w-14 h-14 rounded-full bg-blue-50 text-primary flex items-center justify-center"><Icon name="Activity" size={28} /></div>
+                                <span className="font-semibold text-gray-800 text-[15px]">{t.scanMedicine}</span>
+                            </button>
+                            <button onClick={() => { setScanType('report'); setView('scan'); }} className="bg-white p-4 rounded-[20px] shadow-sm flex flex-col items-center gap-3 border border-gray-100">
+                                <div className="w-14 h-14 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center"><Icon name="FileText" size={28} /></div>
+                                <span className="font-semibold text-gray-800 text-[15px]">{t.scanReport}</span>
+                            </button>
+                            <button onClick={() => setView('addMed')} className="bg-white p-4 rounded-[20px] shadow-sm flex flex-col items-center gap-3 border border-gray-100">
+                                <div className="w-14 h-14 rounded-full bg-green-50 text-success flex items-center justify-center"><Icon name="Plus" size={28} /></div>
+                                <span className="font-semibold text-gray-800 text-[15px]">{t.addReminder}</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Today's Reminders */}
+                    <div className="px-5 mb-6">
+                        <div className="flex justify-between items-center mb-3">
+                            <h2 className="text-[17px] font-bold text-gray-800">{t.todaysReminders}</h2>
+                            <button onClick={() => setView('addMed')}><Icon name="Plus" size={24} className="text-primary" /></button>
+                        </div>
+                        
+                        {medicines.length === 0 ? (
+                            <div className="bg-white border-2 border-dashed border-gray-200 rounded-[20px] p-8 flex flex-col items-center justify-center text-gray-400">
+                                <Icon name="Clock" size={40} className="mb-2 text-gray-300" />
+                                <p className="font-medium">{t.noReminders}</p>
+                            </div>
+                        ) : (
+                            <div className="space-y-3">
+                                {medicines.map(med => (
+                                    <div key={med.id} className="bg-white rounded-[20px] p-4 shadow-sm border border-warning relative">
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <div className="w-3 h-3 rounded-full bg-success"></div>
+                                            <h3 className="font-bold text-gray-900 text-lg">{med.medName}</h3>
+                                        </div>
+                                        <p className="text-gray-500 text-sm ml-5 mb-1">{med.times[0]}</p>
+                                        
+                                        {med.stockCount <= 2 && (
+                                            <p className="text-warning font-semibold text-sm ml-5 mb-3">
+                                                Low Stock Alert — Stock Count: {med.stockCount}
+                                            </p>
+                                        )}
+                                        
+                                        <div className="flex items-center justify-between ml-5 mt-2">
+                                            <button 
+                                                onClick={() => handleTakeMed(med.id)}
+                                                disabled={med.taken}
+                                                className={`px-4 py-1.5 rounded-full font-bold text-sm flex items-center gap-1 ${med.taken ? 'bg-green-100 text-success' : 'border border-success text-success bg-white'}`}
+                                            >
+                                                <Icon name="CheckCircle2" size={16} /> {med.taken ? t.taken : t.markTaken}
+                                            </button>
+                                        </div>
+
+                                        <button onClick={() => deleteMed(med.id)} className="absolute top-4 right-4 text-danger opacity-70">
+                                            <Icon name="Trash2" size={20} />
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+
+            const ViewReminders = () => (
+                <div className="flex-1 flex flex-col bg-background overflow-y-auto">
+                    <div className="bg-primary text-white px-6 py-6 rounded-b-[24px] flex justify-between items-center shadow-sm sticky top-0 z-10">
+                        <div>
+                            <h1 className="text-2xl font-bold">{t.reminders}</h1>
+                            <p className="text-blue-100 text-sm">{medicines.length} total reminders</p>
+                        </div>
+                        <button className="bg-white/20 p-3 rounded-full backdrop-blur-sm">
+                            <Icon name="Volume2" size={24} />
+                        </button>
+                    </div>
+
+                    <div className="p-5 space-y-4 mt-2">
+                        {medicines.length === 0 ? (
+                            <div className="bg-white rounded-[24px] p-8 text-center shadow-sm">
+                                <Icon name="Clock" size={48} className="mx-auto text-gray-300 mb-4" />
+                                <h3 className="font-bold text-xl text-gray-800 mb-2">{t.noReminders}</h3>
+                                <p className="text-gray-500 mb-6">Add a medicine reminder or scan a prescription to create reminders automatically</p>
+                                <button onClick={() => setView('addMed')} className="bg-primary text-white px-6 py-3 rounded-xl font-bold w-full">+ {t.addReminder}</button>
+                            </div>
+                        ) : (
+                            medicines.map(med => (
+                                <div key={med.id} className="bg-white rounded-[20px] p-4 shadow-sm border border-gray-100">
+                                    <div className="flex justify-between items-start mb-2">
+                                        <h3 className="font-bold text-gray-900 text-lg">{med.medName}</h3>
+                                        <span className="bg-blue-50 text-primary text-xs font-bold px-2 py-1 rounded-md">{med.dosage}</span>
+                                    </div>
+                                    <div className="text-gray-500 text-sm mb-2 flex items-center gap-2">
+                                        <Icon name="Clock" size={16} /> {med.times.join(', ')}
+                                    </div>
+                                    <div className="text-gray-500 text-sm flex items-center gap-2">
+                                        <Icon name="Package" size={16} /> Stock: {med.stockCount} left
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                </div>
+            );
+
+            const ViewProfile = () => {
+                const [isEditing, setIsEditing] = useState(false);
+                const [editUser, setEditUser] = useState(user);
+
+                const handleSave = () => {
+                    setUser(editUser);
+                    setIsEditing(false);
+                };
+
+                const langOptions = [
+                    { code: 'en', label: 'English' },
+                    { code: 'hi', label: 'हिंदी' },
+                    { code: 'mr', label: 'मराठी' },
+                    { code: 'ta', label: 'தமிழ்' },
+                    { code: 'bn', label: 'বাংলা' }
+                ];
+
+                return (
+                    <div className="flex-1 flex flex-col bg-background overflow-y-auto">
+                        <div className="bg-primary text-white px-6 py-6 rounded-b-[24px] flex justify-between items-center shadow-sm">
+                            <h1 className="text-2xl font-bold">{t.profile}</h1>
+                            {isEditing ? (
+                                <button onClick={handleSave} className="bg-success text-white p-2 rounded-full backdrop-blur-sm flex items-center gap-1 px-4 shadow-md transition-transform active:scale-95">
+                                    <Icon name="Check" size={20} /> <span className="font-bold text-sm">{t.save}</span>
+                                </button>
+                            ) : (
+                                <button onClick={() => setIsEditing(true)} className="bg-white/20 p-2.5 rounded-full backdrop-blur-sm transition-transform active:scale-95">
+                                    <Icon name="Edit2" size={20} />
+                                </button>
+                            )}
+                        </div>
+
+                        <div className="flex flex-col items-center -mt-8 relative z-10">
+                            <div className="w-24 h-24 bg-gray-200 rounded-full border-4 border-white flex items-center justify-center text-gray-400 mb-3 shadow-sm">
+                                <Icon name="User" size={48} />
+                            </div>
+                            
+                            {isEditing ? (
+                                <input 
+                                    type="text" 
+                                    value={editUser.name} 
+                                    onChange={e => setEditUser({...editUser, name: e.target.value})} 
+                                    className="text-xl font-bold text-gray-900 bg-white border border-gray-300 rounded-xl px-3 py-1.5 text-center outline-none focus:border-primary mb-1 w-3/4 shadow-sm" 
+                                />
+                            ) : (
+                                <h2 className="text-xl font-bold text-gray-900">{user.name}</h2>
+                            )}
+
+                            {isEditing ? (
+                                <input 
+                                    type="tel" 
+                                    value={editUser.phone} 
+                                    onChange={e => setEditUser({...editUser, phone: e.target.value})} 
+                                    className="text-gray-600 bg-white border border-gray-300 rounded-xl px-3 py-1 text-center outline-none focus:border-primary text-sm w-2/3 shadow-sm mt-1" 
+                                />
+                            ) : (
+                                <p className="text-gray-500">{user.phone}</p>
+                            )}
+                            
+                            {/* Emergency Contact Display/Edit */}
+                            {isEditing ? (
+                                <div className="mt-2 w-full flex justify-center">
+                                    <input 
+                                        type="tel" 
+                                        value={editUser.emergencyContact} 
+                                        onChange={e => setEditUser({...editUser, emergencyContact: e.target.value})} 
+                                        className="text-danger bg-red-50 border border-red-200 rounded-xl px-3 py-1 text-center outline-none focus:border-danger text-sm w-2/3 shadow-sm" 
+                                        placeholder="Emergency Contact"
+                                    />
+                                </div>
+                            ) : (
+                                <div className="bg-red-50 text-danger border border-red-100 rounded-full px-3 py-1 mt-2 text-xs font-bold flex items-center gap-1.5">
+                                    <Icon name="PhoneCall" size={12} /> {t.emergencyContact}: {user.emergencyContact || 'Not Set'}
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="p-5 space-y-4 mt-2">
+                            <div className="bg-white rounded-[20px] p-5 shadow-sm border border-gray-100">
+                                <div className="mb-4">
+                                    <p className="text-[11px] uppercase font-bold text-gray-400 tracking-wider mb-1">NAME</p>
+                                    <p className="text-gray-900 font-semibold">{user.name}</p>
+                                </div>
+                                <div className="mb-4">
+                                    <p className="text-[11px] uppercase font-bold text-gray-400 tracking-wider mb-1">AGE</p>
+                                    {isEditing ? (
+                                        <input 
+                                            type="number" 
+                                            value={editUser.age} 
+                                            onChange={e => setEditUser({...editUser, age: e.target.value})} 
+                                            className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-primary font-semibold text-gray-900" 
+                                        />
+                                    ) : (
+                                        <p className="text-gray-900 font-semibold">{user.age}</p>
+                                    )}
+                                </div>
+                                <div>
+                                    <p className="text-[11px] uppercase font-bold text-gray-400 tracking-wider mb-1">GENDER</p>
+                                    {isEditing ? (
+                                        <select 
+                                            value={editUser.gender} 
+                                            onChange={e => setEditUser({...editUser, gender: e.target.value})} 
+                                            className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-primary font-semibold text-gray-900"
+                                        >
+                                            <option value="Female">Female</option>
+                                            <option value="Male">Male</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    ) : (
+                                        <p className="text-gray-900 font-semibold">{user.gender}</p>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div className="bg-white rounded-[20px] p-5 shadow-sm border border-gray-100">
+                                <p className="text-[11px] uppercase font-bold text-gray-400 tracking-wider mb-3">LANGUAGE</p>
+                                <div className="flex gap-2 flex-wrap">
+                                    {langOptions.map(l => (
+                                        <button 
+                                            key={l.code}
+                                            onClick={() => setLang(l.code)}
+                                            className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all active:scale-95 ${lang === l.code ? 'bg-primary text-white shadow-md' : 'bg-blue-50 text-gray-600 hover:bg-blue-100 border border-blue-100/50'}`}
+                                        >
+                                            {l.label}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            };
+
+            const ViewAddMed = () => {
+                const [medName, setMedName] = useState('');
+                const [freq, setFreq] = useState(1);
+                const [times, setTimes] = useState(['08:00']);
+                const [stock, setStock] = useState('30');
+
+                const handleFreq = (n) => {
+                    setFreq(n);
+                    setTimes(Array(n).fill('08:00'));
+                };
+
+                const saveMed = () => {
+                    if(!medName) return;
+                    setMedicines(prev => [...prev, {
+                        id: Date.now().toString(),
+                        medName, dosage: '1 Tablet', frequency: freq, times, stockCount: parseInt(stock), taken: false
+                    }]);
+                    setView('home');
+                };
+
+                return (
+                    <div className="flex-1 flex flex-col bg-background">
+                        <div className="bg-primary text-white px-4 py-5 rounded-b-[24px] flex items-center gap-3 shadow-sm">
+                            <button onClick={() => setView('home')}><Icon name="ArrowLeft" size={24} /></button>
+                            <h1 className="text-2xl font-bold">{t.addReminder}</h1>
+                        </div>
+
+                        <div className="p-5 space-y-6 overflow-y-auto mt-2">
+                            <div>
+                                <label className="block text-gray-700 font-semibold mb-2">{t.medicineName}</label>
+                                <input type="text" value={medName} onChange={e=>setMedName(e.target.value)} className="w-full bg-white p-4 rounded-[16px] text-gray-800 outline-none shadow-sm" placeholder="e.g. Paracetamol 500mg" />
+                            </div>
+
+                            <div>
+                                <label className="block text-gray-700 font-semibold mb-3">{t.frequency}</label>
+                                <div className="flex flex-wrap gap-2">
+                                    {[1,2,3,4,5].map(n => {
+                                        const labels = {1:'Once', 2:'Twice', 3:'3x', 4:'4x', 5:'5x'};
+                                        return (
+                                            <button key={n} onClick={() => handleFreq(n)} className={`px-4 py-2.5 rounded-full text-sm font-bold ${freq === n ? 'bg-primary text-white shadow-md' : 'bg-blue-50 text-primary'}`}>
+                                                {labels[n]} / Day
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-gray-700 font-semibold mb-3">{t.time}</label>
+                                {times.map((t, i) => (
+                                    <div key={i} className="flex items-center gap-3 mb-3">
+                                        <span className="bg-blue-50 text-primary px-3 py-2 rounded-lg text-sm font-bold">Dose {i+1}</span>
+                                        <input type="time" value={t} onChange={e=>{
+                                            const newT = [...times]; newT[i] = e.target.value; setTimes(newT);
+                                        }} className="flex-1 bg-white p-4 rounded-[16px] text-gray-800 font-bold outline-none shadow-sm text-center" />
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div>
+                                <label className="block text-gray-700 font-semibold mb-2">{t.stockCount}</label>
+                                <input type="number" value={stock} onChange={e=>setStock(e.target.value)} className="w-full bg-white p-4 rounded-[16px] text-gray-800 font-bold outline-none shadow-sm" />
+                                <p className="text-xs text-gray-400 mt-2 ml-1">You'll get alerted when stock reaches 2</p>
+                            </div>
+
+                            <button onClick={saveMed} className="w-full bg-primary text-white py-4 rounded-[16px] font-bold text-lg shadow-md flex justify-center items-center gap-2 mt-4">
+                                <Icon name="CheckCircle" size={20} /> {t.save}
+                            </button>
+                        </div>
+                    </div>
+                );
+            };
+
+            const ViewScanner = () => {
+                const [img, setImg] = useState(null);
+                const [result, setResult] = useState(null);
+                const [isAnalyzing, setIsAnalyzing] = useState(false);
+                
+                const currentLanguage = langNames[lang] || "English";
+
+                const analyzeImage = async (base64String, mimeType) => {
+                    setIsAnalyzing(true);
+                    setResult(null);
+
+                    // Mock data logic based on the scan type
+                    if (!apiKey || apiKey.trim() === "") {
+                        setTimeout(() => {
+                            let mockData;
+                            if (scanType === 'prescription') {
+                                mockData = {
+                                    name: "Syp CALPOL (250/5)",
+                                    usage: "Used to treat fever and mild pain.",
+                                    how: "Give 4 mL every 6 hours for 3 days.",
+                                    dosage: "4 mL"
+                                };
+                            } else if (scanType === 'report') {
+                                mockData = {
+                                    name: "No medication prescribed",
+                                    usage: "There is no medication to take because the medical report states you are in good health and have no current medical concerns.",
+                                    how: "You do not need to take any medicine at this time.",
+                                    dosage: "None"
+                                };
+                            } else {
+                                mockData = {
+                                    name: "1-AL (Levocetirizine Tablets IP 5 mg)",
+                                    usage: "Used to treat allergy symptoms like sneezing, runny nose, and itchy eyes.",
+                                    how: "Swallow the tablet whole with a glass of water, with or without food.",
+                                    dosage: "1 Tablet (5 mg)"
+                                };
+                            }
+                            setResult(mockData);
+                            setIsAnalyzing(false);
+                            speak(`Analysis complete. ${mockData.name}.`);
+                        }, 1500);
+                        return;
+                    }
+
+                    try {
+                        const base64Data = base64String.split(',')[1];
+                        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                contents: [{
+                                    parts: [
+                                        { text: `Analyze this image of a medicine, pill bottle, or prescription. Extract the medicine name, what it is used for, how to take it, and the standard dosage. Ensure the language is simple and suitable for an elderly patient. VERY IMPORTANT: Translate your descriptive answers (usage, how) into ${currentLanguage}.` },
+                                        { inlineData: { mimeType: mimeType, data: base64Data } }
+                                    ]
+                                }],
+                                generationConfig: {
+                                    responseMimeType: "application/json",
+                                    responseSchema: {
+                                        type: "OBJECT",
+                                        properties: {
+                                            name: { type: "STRING", description: "Name of the medicine" },
+                                            usage: { type: "STRING", description: "What the medicine is used for in simple terms" },
+                                            how: { type: "STRING", description: "How to take the medicine (e.g., after meals, with water)" },
+                                            dosage: { type: "STRING", description: "Standard dosage (e.g., 1 Tablet, 5ml)" }
+                                        },
+                                        required: ["name", "usage", "how", "dosage"]
+                                    }
+                                }
+                            })
+                        });
+
+                        if (!response.ok) throw new Error(`API Error: ${response.status}`);
+                        const data = await response.json();
+                        const jsonText = data.candidates[0].content.parts[0].text;
+                        const parsedData = JSON.parse(jsonText);
+                        
+                        setResult(parsedData);
+                        speak(`Medicine identified. ${parsedData.name}.`);
+                    } catch (error) {
+                        console.error(error);
+                        setAlertModal({ title: "Analysis Failed", msg: "Failed to analyze the image. Please try a clearer picture.", type: "danger" });
+                    } finally {
+                        setIsAnalyzing(false);
+                    }
+                };
+
+                const handleFile = (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                            setImg(reader.result);
+                            analyzeImage(reader.result, file.type);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                };
+
+                return (
+                    <div className="flex-1 flex flex-col bg-background h-screen">
+                        <div className="bg-primary text-white px-4 py-4 flex justify-between items-center shadow-md z-10 sticky top-0">
+                            <div className="flex items-center gap-3">
+                                <button onClick={() => setView('home')}><Icon name="ArrowLeft" size={24} /></button>
+                                <h1 className="text-[20px] font-bold">
+                                    {scanType === 'prescription' ? t.scanPrescription : scanType === 'report' ? t.scanReport : t.scanMedicine}
+                                </h1>
+                            </div>
+                            <button onClick={() => speak("This is the AI scanner. Upload an image to analyze.")}><Icon name="Volume2" size={24} /></button>
+                        </div>
+
+                        <div className="flex-1 overflow-y-auto pb-6">
+                            {!img ? (
+                                <div className="p-6 h-full flex flex-col justify-center items-center">
+                                    <div className="w-full h-64 border-2 border-dashed border-primary/50 bg-blue-50/50 rounded-[24px] flex flex-col items-center justify-center relative cursor-pointer">
+                                        <Icon name="Camera" size={48} className="text-primary mb-4 opacity-50" />
+                                        <p className="text-primary font-bold">Tap to capture image</p>
+                                        <input type="file" accept="image/*" capture="environment" onChange={handleFile} className="absolute inset-0 opacity-0 cursor-pointer" />
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="w-full">
+                                    <img src={img} alt="Scanned" className="w-full h-64 object-cover object-center shadow-sm" />
+                                    
+                                    <div className="p-4 -mt-4 relative z-10">
+                                        {isAnalyzing ? (
+                                            <div className="bg-white rounded-[24px] p-8 text-center shadow-lg border border-gray-100 flex flex-col items-center">
+                                                <Icon name="Loader2" size={40} className="animate-spin text-primary mb-3" />
+                                                <p className="font-bold text-gray-700">{t.aiAnalyzing}</p>
+                                            </div>
+                                        ) : result ? (
+                                            <div className="bg-white rounded-[24px] p-5 shadow-lg border-2 border-green-50">
+                                                <div className="flex items-center gap-2 mb-5 text-success">
+                                                    <Icon name="CheckCircle2" size={24} />
+                                                    <h2 className="text-lg font-bold">Medicine Identified</h2>
+                                                </div>
+
+                                                <div className="space-y-3">
+                                                    <div className="bg-blue-50/50 p-4 rounded-[16px] border border-blue-50">
+                                                        <p className="text-[11px] uppercase font-bold text-gray-500 tracking-wider mb-1">MEDICINE NAME</p>
+                                                        <p className="text-primary font-bold text-[19px] leading-tight">{result.name}</p>
+                                                    </div>
+
+                                                    <div className="bg-gray-50 p-4 rounded-[16px] border border-gray-100">
+                                                        <p className="text-[11px] uppercase font-bold text-gray-500 tracking-wider mb-1">USED FOR</p>
+                                                        <p className="text-gray-800 font-medium leading-snug text-[15px]">{result.usage}</p>
+                                                    </div>
+
+                                                    <div className="bg-gray-50 p-4 rounded-[16px] border border-gray-100">
+                                                        <p className="text-[11px] uppercase font-bold text-gray-500 tracking-wider mb-1">HOW TO TAKE</p>
+                                                        <p className="text-gray-800 font-medium leading-snug text-[15px]">{result.how}</p>
+                                                    </div>
+                                                    
+                                                    <div className="flex gap-2">
+                                                        <div className="flex-1 bg-gray-50 p-4 rounded-[16px] border border-gray-100">
+                                                            <p className="text-[11px] uppercase font-bold text-gray-500 tracking-wider mb-1">STANDARD DOSAGE</p>
+                                                            <p className="text-gray-800 font-bold">{result.dosage}</p>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <button onClick={() => setView('addMed')} className="w-full bg-primary text-white py-4 rounded-[16px] font-bold mt-4 shadow-md flex justify-center items-center gap-2">
+                                                        <Icon name="PlusCircle" size={20} /> Add to Reminders
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ) : null}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                );
+            };
+
+            // Main Render
+            return (
+                <div className="mobile-container">
+                    {view === 'language' && <ViewLanguage />}
+                    {view === 'login' && <ViewLogin />}
+                    {view === 'home' && <ViewHome />}
+                    {view === 'reminders' && <ViewReminders />}
+                    {view === 'profile' && <ViewProfile />}
+                    {view === 'addMed' && <ViewAddMed />}
+                    {view === 'scan' && <ViewScanner />}
+
+                    {['home', 'reminders', 'profile'].includes(view) && <BottomNav />}
+
+                    {/* Global Alert Modal */}
+                    {alertModal && (
+                        <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-6 backdrop-blur-sm">
+                            <div className="bg-white rounded-3xl p-6 w-[340px] shadow-2xl animate-[fadeIn_0.2s_ease-out]">
+                                <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${
+                                    alertModal.type === 'danger' ? 'bg-red-100 text-danger' :
+                                    alertModal.type === 'warning' ? 'bg-orange-100 text-warning' :
+                                    alertModal.type === 'success' ? 'bg-green-100 text-success' : 'bg-blue-100 text-primary'
+                                }`}>
+                                    <Icon name={
+                                        alertModal.type === 'danger' ? 'AlertOctagon' :
+                                        alertModal.type === 'warning' ? 'AlertTriangle' :
+                                        alertModal.type === 'success' ? 'CheckCircle' : 'Info'
+                                    } size={32} />
+                                </div>
+                                <h3 className="text-2xl font-bold text-center text-gray-800 mb-2">{alertModal.title}</h3>
+                                <p className="text-center text-gray-600 mb-8 leading-relaxed font-medium">{alertModal.msg}</p>
+                                <button 
+                                    onClick={() => setAlertModal(null)}
+                                    className="w-full bg-gray-900 text-white py-4 rounded-xl font-bold text-lg shadow-md active:bg-gray-800"
+                                >
+                                    Understood
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>

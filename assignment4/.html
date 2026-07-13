@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Ultra | Executive Analytics</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root { --accent: #6366f1; --bg: #0f172a; --card-bg: rgba(30, 41, 59, 0.7); }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: #f1f5f9; padding: 40px 20px; }
+        
+        /* Dashboard Grid */
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 25px; }
+
+        /* Glassmorphism Tiles */
+        .glass-tile {
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 28px;
+            padding: 25px;
+            height: 420px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .glass-tile:hover { transform: translateY(-10px); border-color: var(--accent); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+
+        /* Typography */
+        .main-title { font-size: 2.5rem; font-weight: 800; letter-spacing: -1px; }
+        .tile-title { font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 4px; display: flex; align-items: center; gap: 10px; }
+        .tile-subtitle { font-size: 0.8rem; color: #94a3b8; margin-bottom: 20px; font-weight: 400; }
+
+        /* Control Panel */
+        .control-hub {
+            background: rgba(99, 102, 241, 0.05);
+            border: 1px dashed var(--accent);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 40px;
+        }
+        .input-group-text { background: transparent; border: 1px solid #475569; color: #94a3b8; font-size: 0.8rem; }
+        .form-control { background: rgba(0,0,0,0.2); border: 1px solid #475569; color: white; }
+        .form-control:focus { background: rgba(0,0,0,0.4); border-color: var(--accent); color: white; box-shadow: none; }
+
+        .chart-container { flex-grow: 1; position: relative; min-height: 0; }
+        .btn-sync { background: var(--accent); border: none; font-weight: 700; padding: 12px 30px; border-radius: 15px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header class="mb-5 text-center text-md-start d-md-flex justify-content-between align-items-end">
+            <div>
+                <h1 class="main-title mb-0">NEXUS <span class="text-primary">ULTRA</span></h1>
+                <p class="text-muted fw-500">Global System Intelligence & Performance Monitoring</p>
+            </div>
+            <button class="btn btn-primary btn-sync shadow-lg" onclick="randomizeAll()">
+                <i data-lucide="refresh-cw" class="me-2"></i> Auto-Sync Data
+            </button>
+        </header>
+
+        <div class="control-hub">
+            <h6 class="fw-bold mb-3 text-uppercase small text-primary">Live Data Controller</h6>
+            <div class="row g-3">
+                <div class="col-6 col-md-2">
+                    <label class="small text-muted">CPU Load (%)</label>
+                    <input type="number" class="form-control" id="cpuInp" value="65" oninput="manualUpdate('line')">
+                </div>
+                <div class="col-6 col-md-2">
+                    <label class="small text-muted">Free Mem (%)</label>
+                    <input type="number" class="form-control" id="memInp" value="25" oninput="manualUpdate('doughnut')">
+                </div>
+                <div class="col-6 col-md-2">
+                    <label class="small text-muted">Users (US)</label>
+                    <input type="number" class="form-control" id="userInp" value="450" oninput="manualUpdate('bar')">
+                </div>
+                <div class="col-6 col-md-2">
+                    <label class="small text-muted">Security Score</label>
+                    <input type="number" class="form-control" id="secInp" value="85" oninput="manualUpdate('radar')">
+                </div>
+                <div class="col-12 col-md-4 d-flex align-items-end">
+                    <p class="small text-muted mb-2">← Change these values to see the charts react in real-time!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            
+            <div class="glass-tile">
+                <div class="tile-title"><i data-lucide="cpu" class="text-primary"></i> Processor Velocity</div>
+                <p class="tile-subtitle">Tracks real-time transactional load across clusters.</p>
+                <div class="chart-container"><canvas id="lineChart"></canvas></div>
+            </div>
+
+            <div class="glass-tile">
+                <div class="tile-title"><i data-lucide="layers" class="text-info"></i> Resource Partition</div>
+                <p class="tile-subtitle">Analysis of active vs. standby memory blocks.</p>
+                <div class="chart-container"><canvas id="doughnutChart"></canvas></div>
+            </div>
+
+            <div class="glass-tile">
+                <div class="tile-title"><i data-lucide="bar-chart-big" class="text-warning"></i> Geographical Ingress</div>
+                <p class="tile-subtitle">User density and request volume by region.</p>
+                <div class="chart-container"><canvas id="barChart"></canvas></div>
+            </div>
+
+            <div class="glass-tile">
+                <div class="tile-title"><i data-lucide="shield-check" class="text-success"></i> Perimeter Strength</div>
+                <p class="tile-subtitle">Multi-vector analysis of firewall efficiency.</p>
+                <div class="chart-container"><canvas id="radarChart"></canvas></div>
+            </div>
+
+            <div class="glass-tile">
+                <div class="tile-title"><i data-lucide="signal" class="text-danger"></i> Latency Distribution</div>
+                <p class="tile-subtitle">Node response times across global CDN points.</p>
+                <div class="chart-container"><canvas id="polarChart"></canvas></div>
+            </div>
+
+            <div class="glass-tile">
+                <div class="tile-title"><i data-lucide="hard-drive" class="text-white"></i> Archive Capacity</div>
+                <p class="tile-subtitle">Physical disk usage and redundancy status.</p>
+                <div class="chart-container"><canvas id="pieChart"></canvas></div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Set Chart Defaults
+        Chart.defaults.color = '#94a3b8';
+        Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
+        Chart.defaults.borderColor = 'rgba(255,255,255,0.05)';
+
+        let charts = {};
+
+        function init() {
+            // Line Chart
+            charts.line = new Chart(document.getElementById('lineChart'), {
+                type: 'line',
+                data: { labels: ['10:00', '11:00', '12:00', '13:00', '14:00'], datasets: [{ label: 'Load %', data: [45, 55, 40, 70, 65], borderColor: '#6366f1', backgroundColor: 'rgba(99, 102, 241, 0.1)', fill: true, tension: 0.4 }] },
+                options: { maintainAspectRatio: false }
+            });
+
+            // Doughnut
+            charts.doughnut = new Chart(document.getElementById('doughnutChart'), {
+                type: 'doughnut',
+                data: { labels: ['Apps', 'OS', 'Free'], datasets: [{ data: [50, 25, 25], backgroundColor: ['#6366f1', '#ec4899', '#22c55e'], borderWidth: 0 }] },
+                options: { maintainAspectRatio: false, cutout: '75%' }
+            });
+
+            // Bar
+            charts.bar = new Chart(document.getElementById('barChart'), {
+                type: 'bar',
+                data: { labels: ['USA', 'EU', 'Asia', 'LATAM'], datasets: [{ label: 'Users', data: [450, 320, 580, 190], backgroundColor: '#f59e0b', borderRadius: 12 }] },
+                options: { maintainAspectRatio: false }
+            });
+
+            // Radar
+            charts.radar = new Chart(document.getElementById('radarChart'), {
+                type: 'radar',
+                data: { labels: ['DDOS', 'SQLi', 'XSS', 'Auth', 'Port'], datasets: [{ label: 'Defense Score', data: [85, 90, 75, 80, 95], borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.2)' }] },
+                options: { maintainAspectRatio: false }
+            });
+
+            // Polar
+            charts.polar = new Chart(document.getElementById('polarChart'), {
+                type: 'polarArea',
+                data: { labels: ['Node A', 'Node B', 'Node C', 'Node D'], datasets: [{ data: [12, 19, 7, 15], backgroundColor: ['#818cf8', '#fb7185', '#34d399', '#fbbf24'] }] },
+                options: { maintainAspectRatio: false }
+            });
+
+            // Pie
+            charts.pie = new Chart(document.getElementById('pieChart'), {
+                type: 'pie',
+                data: { labels: ['SSD', 'HDD', 'Cloud'], datasets: [{ data: [60, 30, 10], backgroundColor: ['#6366f1', '#94a3b8', '#ec4899'] }] },
+                options: { maintainAspectRatio: false }
+            });
+        }
+
+        // Logic to make charts "Changeable"
+        function manualUpdate(type) {
+            if (type === 'line') {
+                const val = parseInt(document.getElementById('cpuInp').value);
+                charts.line.data.datasets[0].data[charts.line.data.datasets[0].data.length - 1] = val;
+                charts.line.update();
+            }
+            if (type === 'doughnut') {
+                const val = parseInt(document.getElementById('memInp').value);
+                charts.doughnut.data.datasets[0].data[2] = val; // Updates "Free" space
+                charts.doughnut.update();
+            }
+            if (type === 'bar') {
+                const val = parseInt(document.getElementById('userInp').value);
+                charts.bar.data.datasets[0].data[0] = val; // Updates USA users
+                charts.bar.update();
+            }
+            if (type === 'radar') {
+                const val = parseInt(document.getElementById('secInp').value);
+                charts.radar.data.datasets[0].data[0] = val; // Updates DDOS score
+                charts.radar.update();
+            }
+        }
+
+        function randomizeAll() {
+            Object.values(charts).forEach(c => {
+                c.data.datasets[0].data = c.data.datasets[0].data.map(() => Math.floor(Math.random() * 100) + 10);
+                c.update();
+            });
+        }
+
+        init();
+        lucide.createIcons();
+    </script>
+</body>
+</html>

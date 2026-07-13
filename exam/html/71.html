@@ -1,0 +1,56 @@
+<!--
+71	Design a responsive personal portfolio with sections: About, Skills, Projects, Contact.	
+Static Frontend UI
+-->
+<html>
+    <style>
+        body{margin:0;font-family:sans-serif}
+        section{padding:40px;text-align:center}
+
+        nav{background: black; color:white;padding:10px;position:sticky;top:0}
+        nav a{color:white;margin:10px;text-decoration:none}
+
+        .bar{background:#ddd;height:10px;margin:10px}
+        .fill{background:black;height:10px}
+
+        @media(max-width:600px)
+        {
+            nav{font-size:14px}
+        }
+
+    </style>
+
+    <body>
+
+        <nav>
+            <a href="#about">About</a>
+            <a href="#skill">Skills</a>
+            <a href="#projects">project</a>
+            <a href="#contact">contact</a>
+        </nav>
+
+        <section id="about">
+            <h1>My portfolio</h1>
+            <p>Simple personal website</p>
+        </section>
+
+        <section id="skills">
+            <h3>HTML</h3>
+        <div class="bar"><div class="fill" style="width:80%"></div></div>
+         <h3>CSS</h3>   
+        <div class="bar"><div class="fill" style="width:60%"></div></div>
+           </section>
+           <section id="projects">
+  <h2>Projects</h2>
+  <p>Project 1 | Project 2</p>
+</section>
+
+<section id="contact">
+  <h2>Contact</h2>
+  <p>Email: test@gmail.com</p>
+</section>
+
+    </body>
+</html>
+
+

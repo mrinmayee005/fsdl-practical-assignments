@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Crop Yield</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body{background:#111;color:#fff;text-align:center}
+canvas{max-width:500px;margin:30px auto;display:block}
+</style>
+</head>
+
+<body>
+<h2>Crop Yield Chart</h2>
+
+<canvas id="chart1"></canvas>
+<canvas id="chart2"></canvas>
+
+<script>
+fetch("/data")
+.then(r=>r.json())
+.then(d=>{
+  console.log("DB DATA:",d);
+
+  // Chart 1: Yield vs Year
+  new Chart(chart1,{
+    type:"bar",
+    data:{
+      labels:d.map(x=>x.year),
+      datasets:[{
+        label:"Yield",
+        data:d.map(x=>x.yield)
+      }]
+    }
+  });
+
+  // Chart 2: Rainfall vs Year
+  new Chart(chart2,{
+    type:"line",
+    data:{
+      labels:d.map(x=>x.year),
+      datasets:[{
+        label:"Rainfall",
+        data:d.map(x=>x.rainfall)
+      }]
+    }
+  });
+})
+.catch(err=>console.error("ERROR:",err));
+</script>
+</body>
+</html>

@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bombay Button | Modern Indian Threads</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root { 
+            --accent: #FF8C00; 
+            --primary: #1A237E; 
+            --dark: #121212; 
+            --soft-bg: #fffbf5; 
+        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--soft-bg); color: var(--dark); overflow-x: hidden; }
+        
+        .navbar-brand { font-weight: 800; color: var(--primary) !important; letter-spacing: -1px; }
+        .navbar { border-bottom: 1px solid rgba(26, 35, 126, 0.1); background: white; z-index: 1050; }
+
+        /* Auth Modals */
+        .modal-content { border-radius: 20px; border: none; }
+        .form-control { border-radius: 10px; padding: 12px; border: 1px solid #eee; }
+        .form-control:focus { box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1); border-color: var(--primary); }
+
+        /* Product Cards */
+        .product-card { border: none; background: transparent; transition: 0.3s; margin-bottom: 2rem; position: relative; }
+        .img-box { 
+            position: relative; border-radius: 24px; overflow: hidden; height: 420px; 
+            box-shadow: 0 10px 30px rgba(26, 35, 126, 0.05); background: #f0f0f0; 
+        }
+        .img-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.8s ease; }
+        .product-card:hover .img-box img { transform: scale(1.05); }
+        
+        .heart-btn {
+            position: absolute; top: 20px; right: 20px;
+            background: white; border: none; width: 40px; height: 40px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            z-index: 10; transition: 0.3s; color: var(--primary);
+        }
+        .heart-btn.active { color: var(--accent); fill: var(--accent); }
+
+        /* Sidebar & Overlay */
+        .cart-sidebar { 
+            position: fixed; right: -400px; top: 0; width: 380px; height: 100vh; 
+            background: white; z-index: 2050; transition: 0.5s cubic-bezier(0.77, 0, 0.175, 1); 
+            box-shadow: -15px 0 45px rgba(0,0,0,0.1); 
+        }
+        .cart-sidebar.open { right: 0; }
+        .cart-overlay { 
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+            background: rgba(26, 35, 126, 0.2); backdrop-filter: blur(4px); z-index: 2000; 
+            display: none; 
+        }
+
+        .btn-luxe { background: var(--primary); color: white; border-radius: 50px; padding: 12px 30px; border: none; transition: 0.3s; font-weight: 600; width: 100%; }
+        .btn-luxe:hover { background: var(--accent); transform: translateY(-2px); color: white; }
+        
+        .badge-india { background: var(--accent); color: white; }
+        .auth-status { font-size: 0.9rem; font-weight: 600; cursor: pointer; color: var(--primary); }
+    </style>
+</head>
+<body>
+
+    <div id="toast" class="position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 3100; display: none;">
+        <div class="alert alert-dark shadow-lg rounded-pill px-4" id="toastMsg"></div>
+    </div>
+
+    <div class="cart-overlay" id="cartOverlay"></div>
+
+    <nav class="navbar navbar-expand-lg sticky-top bg-white py-3">
+        <div class="container">
+            <a class="navbar-brand fs-2" href="#">BOMBAY BUTTON<span style="color: var(--accent);">.</span></a>
+            
+            <div class="d-flex align-items-center gap-3">
+                <div id="userSection" class="auth-status d-flex align-items-center gap-2">
+                    <button class="btn btn-sm btn-outline-primary rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
+                </div>
+                <div class="position-relative" id="wishlistTrigger" style="cursor: pointer;">
+                    <i data-lucide="heart"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark" id="wishCount">0</span>
+                </div>
+                <div class="position-relative" id="cartTrigger" style="cursor: pointer;">
+                    <i data-lucide="shopping-bag"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-india" id="cartCount">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-4">
+        <div class="p-5 text-center hero animate__animated animate__fadeIn">
+            <span class="badge bg-light text-dark mb-3 px-3 py-2 rounded-pill border">ESTABLISHED 2024</span>
+            <h1 class="display-2 fw-800 mb-4">India’s Essence, <br><span style="color: var(--primary)">Modern Soul.</span></h1>
+            <p class="text-muted mx-auto" style="max-width: 600px;">Handpicked textures and contemporary silhouettes from the heart of India.</p>
+        </div>
+    </div>
+
+    <div class="container mb-5">
+        <div class="d-flex justify-content-center gap-2 flex-wrap" id="filterContainer">
+            <button class="btn btn-outline-primary rounded-pill active" onclick="filterProducts('all', this)">All</button>
+            <button class="btn btn-outline-primary rounded-pill" onclick="filterProducts('Kurtas', this)">Kurtas</button>
+            <button class="btn btn-outline-primary rounded-pill" onclick="filterProducts('Sarees', this)">Sarees</button>
+            <button class="btn btn-outline-primary rounded-pill" onclick="filterProducts('Jewelry', this)">Jewelry</button>
+            <button class="btn btn-outline-primary rounded-pill" onclick="filterProducts('Accessories', this)">Footwear</button>
+        </div>
+    </div>
+
+    <div class="container pb-5">
+        <div class="row g-4" id="mainGrid"></div>
+    </div>
+
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-4">
+                <div class="modal-header border-0">
+                    <h3 class="fw-800">Welcome Back</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Email</label>
+                            <input type="email" id="loginEmail" class="form-control" placeholder="name@example.com" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label small fw-bold">Password</label>
+                            <input type="password" id="loginPass" class="form-control" placeholder="••••••••" required>
+                        </div>
+                        <button type="submit" class="btn-luxe py-3">Login to Account</button>
+                    </form>
+                    <p class="text-center mt-4 small">New here? <a href="#" class="text-primary fw-bold" data-bs-toggle="modal" data-bs-target="#regModal">Create an account</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="regModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-4">
+                <div class="modal-header border-0">
+                    <h3 class="fw-800">Join the Family</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="regForm">
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Full Name</label>
+                            <input type="text" id="regName" class="form-control" placeholder="raj kumar" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Email Address</label>
+                            <input type="email" id="regEmail" class="form-control" placeholder="name@email.com" required>
+                            <div class="invalid-feedback">Please enter a valid email.</div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label small fw-bold">Password (min 6 chars)</label>
+                            <input type="password" id="regPass" class="form-control" minlength="6" placeholder="••••••••" required>
+                        </div>
+                        <button type="submit" class="btn-luxe py-3">Register Now</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cart-sidebar d-flex flex-column" id="cartSidebar">
+        <div class="p-4 d-flex justify-content-between border-bottom">
+            <h4 class="fw-bold mb-0">Your Bag</h4>
+            <button class="btn-close" onclick="toggleCart(false)"></button>
+        </div>
+        <div class="p-4 flex-grow-1 overflow-auto" id="cartList"></div>
+        <div class="p-4 border-top bg-light">
+            <div class="d-flex justify-content-between mb-4">
+                <span class="fs-5">Subtotal</span>
+                <span class="fs-5 fw-bold" id="totalPrice">₹0</span>
+            </div>
+            <button class="btn btn-dark w-100 py-3 rounded-pill fw-bold" onclick="handleCheckout()">Confirm Order</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const products = [
+            { id: 1, name: "Indigo Block-Print Kurta", price: 2499, category: "Kurtas", img: "image5.png" },
+            { id: 2, name: "Chanderi Silk Saree", price: 8999, category: "Sarees", img: "image.png" },
+            { id: 3, name: "Hand-tooled Kolhapuris", price: 1200, category: "Accessories", img: "image2.jpg" },
+            { id: 4, name: "Linen Nehru Jacket", price: 3500, category: "Kurtas", img: "image3.png" },
+            { id: 5, name: "Zardozi Clutch Bag", price: 4200, category: "Accessories", img: "image4.png" },
+            { id: 6, name: "Gold Plated Jhumkas", price: 2100, category: "Jewelry", img: "image7.jpg" },
+            { id: 7, name: "Ivory Chikankari Set", price: 5600, category: "Kurtas", img: "image8.jpg" },
+            { id: 8, name: "Banarasi Silk Dupatta", price: 3200, category: "Sarees", img: "image6.png" }
+        ];
+
+        let cart = [];
+        let wishlist = [];
+        let currentUser = JSON.parse(localStorage.getItem('bb_user')) || null;
+        let currentFilter = 'all';
+
+        window.onload = () => {
+            cart = JSON.parse(localStorage.getItem('bb_cart')) || [];
+            wishlist = JSON.parse(localStorage.getItem('bb_wishlist')) || [];
+            updateUI();
+            checkUser();
+        };
+
+        // UI Updates
+        function updateUI() {
+            const grid = document.getElementById('mainGrid');
+            const activeData = currentFilter === 'all' ? products : products.filter(p => p.category === currentFilter);
+            
+            grid.innerHTML = activeData.map(p => {
+                const isWishlisted = wishlist.includes(p.id) ? 'active' : '';
+                return `
+                <div class="col-6 col-lg-3 animate__animated animate__fadeIn">
+                    <div class="product-card">
+                        <div class="img-box">
+                            <button class="heart-btn ${isWishlisted}" onclick="toggleWish(${p.id})">
+                                <i data-lucide="heart" size="18"></i>
+                            </button>
+                            <img src="${p.img}">
+                        </div>
+                        <div class="pt-3">
+                            <h6 class="fw-bold mb-1">${p.name}</h6>
+                            <p class="text-muted small mb-2">₹${p.price}</p>
+                            <button onclick="addToCart(${p.id})" class="btn btn-outline-dark btn-sm rounded-pill w-100">Add to Bag</button>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+            
+            document.getElementById('cartCount').innerText = cart.length;
+            document.getElementById('wishCount').innerText = wishlist.length;
+            
+            renderCart();
+            lucide.createIcons();
+        }
+
+        function renderCart() {
+            const cartList = document.getElementById('cartList');
+            cartList.innerHTML = cart.length === 0 ? '<p class="text-center mt-5">Bag is empty</p>' : 
+                cart.map((item, idx) => `
+                <div class="d-flex gap-3 mb-3 align-items-center">
+                    <img src="${item.img}" width="60" height="60" class="rounded-3" style="object-fit:cover">
+                    <div class="flex-grow-1">
+                        <h6 class="mb-0 fw-bold x-small" style="font-size:0.8rem">${item.name}</h6>
+                        <span class="text-muted small">₹${item.price}</span>
+                    </div>
+                    <button class="btn btn-sm text-danger" onclick="removeCart(${idx})"><i data-lucide="trash"></i></button>
+                </div>`).join('');
+
+            const total = cart.reduce((acc, curr) => acc + curr.price, 0);
+            document.getElementById('totalPrice').innerText = `₹${total}`;
+        }
+
+        // Actions
+        function addToCart(id) {
+            if (!currentUser) {
+                showToast("Please login to start shopping ✨");
+                bootstrap.Modal.getOrCreateInstance('#loginModal').show();
+                return;
+            }
+            const product = products.find(p => p.id === id);
+            cart.push(product);
+            saveData();
+            updateUI();
+            showToast("Added to bag!");
+        }
+
+        function toggleWish(id) {
+            const index = wishlist.indexOf(id);
+            if(index > -1) wishlist.splice(index, 1);
+            else wishlist.push(id);
+            saveData();
+            updateUI();
+        }
+
+        function handleCheckout() {
+            if (cart.length === 0) return showToast("Your bag is empty!");
+            showToast("Order Confirmed! Check your email.");
+            cart = [];
+            saveData();
+            updateUI();
+            toggleCart(false);
+        }
+
+        
+        document.getElementById('regForm').onsubmit = (e) => {
+            e.preventDefault();
+            const user = { 
+                name: document.getElementById('regName').value,
+                email: document.getElementById('regEmail').value 
+            };
+            localStorage.setItem('bb_user', JSON.stringify(user));
+            currentUser = user;
+            bootstrap.Modal.getInstance('#regModal').hide();
+            checkUser();
+            showToast(`Welcome, ${user.name}!`);
+        };
+
+        document.getElementById('loginForm').onsubmit = (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            currentUser = { name: email.split('@')[0], email: email };
+            localStorage.setItem('bb_user', JSON.stringify(currentUser));
+            bootstrap.Modal.getInstance('#loginModal').hide();
+            checkUser();
+            showToast("Logged in successfully!");
+        };
+
+        function checkUser() {
+            const container = document.getElementById('userSection');
+            if (currentUser) {
+                container.innerHTML = `
+                    <div class="dropdown">
+                        <span class="dropdown-toggle" data-bs-toggle="dropdown">Hi, ${currentUser.name}</span>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>
+                        </ul>
+                    </div>`;
+            } else {
+                container.innerHTML = `<button class="btn btn-sm btn-outline-primary rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>`;
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('bb_user');
+            currentUser = null;
+            cart = [];
+            saveData();
+            updateUI();
+            checkUser();
+            showToast("Logged out");
+        }
+
+        // Utilities
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = msg;
+            t.style.display = 'block';
+            setTimeout(() => { t.style.display = 'none'; }, 2500);
+        }
+
+        function saveData() {
+            localStorage.setItem('bb_cart', JSON.stringify(cart));
+            localStorage.setItem('bb_wishlist', JSON.stringify(wishlist));
+        }
+
+        function toggleCart(show) {
+            document.getElementById('cartSidebar').classList.toggle('open', show);
+            document.getElementById('cartOverlay').style.display = show ? 'block' : 'none';
+        }
+
+        function removeCart(idx) {
+            cart.splice(idx, 1);
+            saveData();
+            updateUI();
+        }
+
+        function filterProducts(cat, btn) {
+            currentFilter = cat;
+            document.querySelectorAll('#filterContainer .btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            updateUI();
+        }
+
+        document.getElementById('cartTrigger').onclick = () => toggleCart(true);
+        document.getElementById('cartOverlay').onclick = () => toggleCart(false);
+    </script>
+</body>
+</html>

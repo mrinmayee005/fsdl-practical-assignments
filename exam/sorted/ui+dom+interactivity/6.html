@@ -1,0 +1,68 @@
+<!--6. Build a Product Gallery that dynamically displays products from a JSON dataset using cards and includes a “Buy Now” interaction.-->
+
+<html>
+    <head><title>Product Gallery</title></head>
+    
+<style>
+    body{
+        font-family: Arial;
+        background: whitesmoke;
+        padding: 20px;
+    }
+    #g{
+        display:flex;
+        gap:15px;
+    }
+
+    .card{
+        border: 1px solid black;
+        padding : 20px;
+        width:160px;
+        text-align: center;
+        border-radius:10px;
+        background: white;
+    }
+
+    .card:hover{
+        transform: scale(1.05);
+        transition:0.3s;
+        }
+
+        button{
+            padding :6px 10px;
+            border:none;
+            background: #007bff;
+            color: aliceblue;
+            border-radius: 5px;
+            cursor:pointer;
+        }
+
+        button:hover{
+            background: #0056b3;
+        }
+</style>
+
+    <body>
+        <div id="g"></div>
+
+
+        <script>
+            let p=[{name:"Phone",price:20000},
+            {name:"Laptop",price:789000},
+            {name:"watch",price:50000}];
+
+            g.innerHTML=p.map(  x=>
+            `<div class="card">
+                <h4>${x.name}</h4>
+                <p>${x.price}</p>
+                <button onclick= "buy('${x.name}')"> Buy Now</button>
+                </div>
+            `).join("");
+
+            function buy(name)
+            {
+                alert("buying"+name);
+            }
+        </script>
+    </body>
+</html>

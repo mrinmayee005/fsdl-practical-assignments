@@ -1,0 +1,45 @@
+<!--
+34	Create a simple blog page with header, sidebar, content area, and footer using CSS layout techniques.	
+Static Frontend UI
+-->
+
+<html>
+    <head>
+        <title>Blog</title>
+    </head>
+<style>
+    body{
+        margin:0;
+        font-family:Arial;
+    }
+    header, footer{
+        background: black;
+        color:white;
+        text-align:center;
+        padding:10px;
+    }
+    .container{
+        display:flex;
+    }
+
+    aside{
+        width:30%;
+        background:lightgrey;
+        padding:20px;
+    }
+
+    main{
+        width:70%;
+        padding:20px;
+    }
+</style>
+    <body>
+        <header>My Blog</header>
+        <div class="container">
+            <aside>Sidebar</aside>
+            <main>Blog content</main>
+        </div>
+
+        <footer>Footer</footer>
+    </body>
+</html>

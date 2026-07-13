@@ -1,0 +1,27 @@
+<!--14. Write a program that accepts a string input and performs operations such as reversing, converting to uppercase/lowercase, and calculating its length.-->
+
+<html>
+    <body>
+        <h3> String operation</h3>
+        <input type="text"  id="txt" placeholder="enter text">
+        <br><br>
+        <button onclick="op('rev')">Reverse</button>
+        <button onclick="op('up')">Upper</button>
+        <button onclick="op('low')">Lower</button>
+        <button onclick="op('len')">Length</button>
+
+        <p id="out"></p>
+        <script>
+            function op(t)
+            {
+                let s=document.getElementById("txt").value;
+                if(t=='rev') r=s.split('').reverse().join('');
+                if(t=='up') r=s.toUpperCase();
+                if(t=='low') r=s.toLowerCase();
+                if(t=='len') r=s.length;
+
+                document.getElementById("out").innerText=r;
+            }
+        </script>
+    </body>
+</html>

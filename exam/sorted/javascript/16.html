@@ -1,0 +1,63 @@
+<!--16. Create a Quiz Application with multiple questions and display the final score after submission.
+
+<html>
+    <h3>Quiz</h3>
+
+    <form id="quiz">
+        <p>1.  2+2=?</p>
+        <input type="radio" name="q1" value="3">3
+        <input type="radio" name="q1" value="4">4
+
+<p>1. capital of india?</p>
+        <input type="radio" name="q2" value="delhi">delhi
+        <input type="radio" name="q2" value="mumbai">mumbai
+<br>
+<br>
+        <button type="button" onclick="check()">Submit</button>
+
+    </form>
+    <h4 id="res"></h4>
+    <script>
+        function check()
+        {
+            let score=0;
+            if(document.querySelector('input[name="q1"]:checked')?.value=="4") score++;
+            if(document.querySelector('input[name="q2"]:checked')?.value=="delhi")score++;
+
+            document.getElementById("res").innerText="score:"+score+" /2";
+      }
+    </script>
+</html>-->
+
+<html>
+    <head><title>Quiz</title></head>
+
+    <body>
+        <div class="container">
+            <h3>Quiz</h3>
+            <form id="quiz">
+                <p>1. 2+2=?</p>
+                <label><input type="radio" name="q1" value="3">3</label>
+                <label><input type="radio" name="q1" value="4">4</label>
+                
+      <p>2. What is capital of india?</p>
+                <label><input type="radio" name="q2" value="delhi">delhi</label>
+                <label><input type="radio" name="q2" value="mumbai">mumbai</label>
+            <button type="button" onclick="check()">Submit</button>
+      <h4 id="res"></h4>
+            </form>
+        </div>
+
+
+        <script>
+         function check()
+         {
+            let score=0;
+            if(document.querySelector('input[name="q1"]:checked')?.value=='4')score++;
+            if(document.querySelector('input[name="q2"]:checked')?.value=="delhi")score++;
+
+            document.getElementById("res").innerText="Score: "+score+" /2";
+         }
+        </script>
+    </body>
+</html>

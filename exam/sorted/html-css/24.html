@@ -1,0 +1,52 @@
+<!--24. Build an Image Gallery with Category Filtering using HTML, CSS, and JavaScript.-->
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body{font-family:Arial;text-align:center}
+
+button{margin:5px;padding:8px}
+
+.gallery{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:10px;
+}
+
+.item img{
+  width:120px;
+  height:100px;
+}
+</style>
+</head>
+
+<body>
+
+<h3>Image Gallery</h3>
+
+<button onclick="filter('all')">All</button>
+<button onclick="filter('nature')">Nature</button>
+<button onclick="filter('city')">City</button>
+
+<div class="gallery">
+
+  <div class="item nature"><img src="https://via.placeholder.com/120x100"></div>
+  <div class="item city"><img src="https://via.placeholder.com/120x100"></div>
+  <div class="item nature"><img src="https://via.placeholder.com/120x100"></div>
+  <div class="item city"><img src="https://via.placeholder.com/120x100"></div>
+
+</div>
+
+<script>
+function filter(c){
+  document.querySelectorAll(".item").forEach(i=>{
+    i.style.display = (c=="all" || i.classList.contains(c)) ? "block":"none";
+  });
+}
+</script>
+
+</body>
+</html>

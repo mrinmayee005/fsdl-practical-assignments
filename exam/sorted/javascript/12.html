@@ -1,0 +1,105 @@
+<!--12. Develop a Basic Calculator that performs addition, subtraction, multiplication, and division operations.
+
+
+<html>
+    <body>
+       <h3>Basic Calculator</h3>
+       <input id="a" type="number" placeholder="A">
+       <input id="b" type="number" placeholder="B">
+
+       <br>
+       <br>
+
+       <button onclick="calc('+')">+</button>
+       <button onclick="calc('-')">-</button>
+       <button onclick="calc('*')">*</button>
+       <button onclick="calc('/')">/</button>
+
+        <h4>Result :<span id="r">0</span></h4>
+        
+        <script>
+            function calc(op)
+            {
+                let a=+document.getElementById("a").value;
+                let b=+document.getElementById("b").value;
+
+                if(op=='+') r=a+b;
+                if(op=='-') r=a-b;
+                if(op=='*') r=a*b;
+                if(op=='/') r=b?a/b:"Error";
+
+                document.getElementById("r").innerText=r;            }
+        </script>
+    </body>
+</html>
+
+-->
+
+<html>
+    <head><title>calculator</title></head>
+
+    <style>
+  body{
+    font-family: Arial, Helvetica, sans-serif;
+    background: whitesmoke;
+    text-align: center;
+    padding:30px;
+  }
+  input{
+    padding:8px;
+    margin:5px;
+    width:100px;
+  }
+
+  button{
+    padding:8px;
+    margin:5px;
+    background: blue;
+    color:white;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  button:hover{
+    background: #0056b3;
+
+  }
+
+  .result{
+    margin-top:15px;
+    font-size:18px;
+  }
+    </style>
+
+    <body>
+        <h3> Basic Calculator</h3>
+
+        <input id="a" type="number" placeholder="A">
+        <input id="b" type="number" placeholder="B">
+
+        <br>
+        <br>
+
+        <button onclick="calc('+')">+</button>
+        <button onclick="calc('-')">-</button>
+        <button onclick="calc('*')">*</button>
+        <button onclick="calc('/')">/</button>
+    <h4 class="result">Result:  <span id="r">0</span></h4> 
+    </body>
+
+    <script>
+        function calc(op)
+        {
+            let a=+document.getElementById("a").value;
+            let b=+document.getElementById("b").value;
+            
+            if(op=='+') r=a+b;
+            if(op=='-') r=a-b;
+            if(op=='*') r=a*b;
+            if(op=='/') r=b?a/b:"Error";
+
+            document.getElementById("r").innerText=r;
+  
+  
+        }
+    </script>
+</html>

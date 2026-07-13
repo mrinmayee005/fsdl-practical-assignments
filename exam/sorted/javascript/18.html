@@ -1,0 +1,107 @@
+<!--18. Build a Notes Application where users can add and delete notes, with data stored using localStorage.
+
+<html>
+    <body>
+        <h3>Notes</h3>
+ <input id="t">
+ <button onclick="add()">ADD</button>
+<ul id="l"></ul>
+
+<script>
+    let n=JSON.parse(localStorage.getItem("n"))||[];
+
+    function show()
+    {
+        l.innerHTML=n.map((x,i)=>
+    `<li>${x}<button onclick="del(${i})"> X <button></li>`).join("");
+    }
+
+    function add()
+    {
+        if(!t.value) return;
+        n.push(t.value);
+        localStorage.setItem("n",JSON.stringify(n));
+        t.value="";
+        show();
+    }
+
+    function del(i)
+    {
+        n.splice(i,1);
+        localStorage.setItem("n",JSON.stringify(n));
+        show();
+    }
+    show();
+</script>
+    </body>
+</html>
+
+<html>
+    <h3>Notes</h3>
+    <input id="t" placeholder="Enter notes">
+    <button onclick="add()">ADD</button>
+
+    <ul id="l"></ul>
+
+    <script>
+        let n=JSON.parse(localStorage.getItem("n"))||[];
+        function show(){
+            l.innerHTML=n.map((x,i)=>
+            `<li>${x}<button onclick="del(${i})">X<button></li>`
+      ).join("");
+      }
+
+      function add()
+      {
+        if(!t.value) return;
+        n.push(t.value);
+        localStorage.setItem("n",JSON.stringify(n));
+        t.value="";
+        show();
+      }
+
+      function del(i){
+        n.splice(i,1);
+        localStorage.setItem("n",JSON.stringify(n));
+        show();
+      }
+      show();
+    </script>
+</html>-->
+<html>
+    <body>
+        <input id="t">
+        <button onclick="add()">ADD</button>
+
+        <ul id="l"></ul>
+
+        <script>
+            let n=JSON.parse(localStorage.getItem("n"))||[];
+            function show()
+            {
+                l.innerHTML="";
+                for(let i=0;i<n.length;i++)
+            {
+                l.innerHTML+="<li>"+n[i]+"<button onclick=del("+i+")>X</button></li>";
+            }
+            }
+
+            function add()
+            {
+                if(!t.value) return;
+                n.push(t.value);
+                localStorage.setItem("n",JSON.stringify(n));
+                t.value="";
+                show();
+            }
+
+            function del(i)
+            {
+                n.splice(i,1);
+                localStorage.setItem("n",JSON.stringify(n));
+                show();
+            }
+            show();
+        </script>
+    </body>
+</html>

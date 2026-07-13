@@ -1,0 +1,64 @@
+<!--7. Design a Responsive Navigation Bar with at least one dropdown menu using HTML, CSS, and JavaScript.-->
+
+<html>
+    <head><title>Responsive navbar</title></head>
+  <style>
+    .nav{
+        background: #333;
+        display:flex;
+        align-items: center;
+    }
+
+    .nav a{
+        color:white;
+        padding:10px;
+        text-decoration:none;
+    }
+
+    .dropdown{
+        position:relation;
+    }
+
+    .menu{
+        display:none;
+        position:absolute;
+        background:white;
+    }
+
+    .menu a{
+        color:black;
+        display: block;
+        padding:5px;
+    }
+
+    @media(max-width:600px)
+    {
+        .nav{
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+  </style>
+    <body>
+        <div class="nav">
+            <a href="#">Home</a>
+
+            <div class="dropdown">
+                <a href="#" onclick="d()">Service</a>
+                <div id="m" class="menu">
+                    <a href="#">Web</a>
+                    <a href="#">App</a>
+                </div>
+            </div>
+
+            <a href="#">Contact</a>
+        </div>
+
+        <script>
+            function d()
+            {
+                m.style.display=(m.style.display=="block") ?"none":"block";
+            }
+        </script>
+    </body>
+</html>

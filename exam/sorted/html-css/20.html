@@ -1,0 +1,171 @@
+<!--20. Create a Student Registration Form with fields such as Name, Email, Gender, Course, and Address, and apply proper styling.-->
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body{
+  font-family: Arial;
+  background:#f2f2f2;
+}
+
+form{
+  width:300px;
+  margin:40px auto;
+  background:white;
+  padding:20px;
+  border-radius:8px;
+  box-shadow:0 0 10px #ccc;
+}
+
+input,select,textarea{
+  width:100%;
+  margin:8px 0;
+  padding:8px;
+}
+
+button{
+  width:100%;
+  padding:10px;
+  background:#333;
+  color:white;
+  border:none;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<form>
+<h3>Student Registration</h3>
+
+<input type="text" placeholder="Name">
+<input type="email" placeholder="Email">
+
+<select>
+  <option>Gender</option>
+  <option>Male</option>
+  <option>Female</option>
+</select>
+
+<select>
+  <option>Course</option>
+  <option>Computer</option>
+  <option>IT</option>
+</select>
+
+<textarea placeholder="Address"></textarea>
+
+<button>Submit</button>
+
+</form>
+
+</body>
+</html>
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body{
+  font-family: Arial;
+  background:#f2f2f2;
+  margin:0;
+  padding:0;
+}
+
+form{
+  width:320px;
+  margin:50px auto;
+  background:white;
+  padding:20px;
+  border-radius:10px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+h3{
+  text-align:center;
+  margin-bottom:15px;
+}
+
+input,select,textarea{
+  width:100%;
+  margin:8px 0;
+  padding:10px;
+  border:1px solid #ccc;
+  border-radius:5px;
+  outline:none;
+}
+
+input:focus,select:focus,textarea:focus{
+  border-color:#333;
+}
+
+button{
+  width:100%;
+  padding:10px;
+  background:#333;
+  color:white;
+  border:none;
+  border-radius:5px;
+  cursor:pointer;
+}
+
+button:hover{
+  background:#555;
+}
+</style>
+</head>
+
+<body>
+
+<form id="regForm">
+<h3>Student Registration</h3>
+
+<input type="text" id="name" placeholder="Name">
+<input type="email" id="email" placeholder="Email">
+
+<select id="gender">
+  <option value="">Gender</option>
+  <option>Male</option>
+  <option>Female</option>
+</select>
+
+<select id="course">
+  <option value="">Course</option>
+  <option>Computer</option>
+  <option>IT</option>
+</select>
+
+<textarea id="address" placeholder="Address"></textarea>
+
+<button type="submit">Submit</button>
+
+</form>
+
+<script>
+document.getElementById("regForm").addEventListener("submit", function(e){
+  e.preventDefault();
+
+  let name = document.getElementById("name").value;
+  let email = document.getElementById("email").value;
+  let gender = document.getElementById("gender").value;
+  let course = document.getElementById("course").value;
+  let address = document.getElementById("address").value;
+
+  // Simple validation
+  if(name === "" || email === "" || gender === "" || course === "" || address === ""){
+    alert("⚠ Please fill all fields!");
+    return;
+  }
+
+  alert("✅ Registration Successful!");
+
+  // reset form
+  document.getElementById("regForm").reset();
+});
+</script>
+
+</body>
+</html>

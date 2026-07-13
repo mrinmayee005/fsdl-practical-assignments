@@ -1,0 +1,188 @@
+<!--19. Design a Structured Resume Webpage including sections like Objective, Education, Skills, Projects, and Contact Information. in this include css but keep it minimal as possible but attractive and needed-->
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body{
+  font-family: Arial;
+  margin: 30px;
+  background:#f4f4f4;
+}
+
+.container{
+  max-width:600px;
+  background:white;
+  padding:20px;
+  border-radius:10px;
+  box-shadow:0 0 10px #ccc;
+}
+
+h2{
+  text-align:center;
+}
+
+h3{
+  border-left:4px solid #333;
+  padding-left:8px;
+}
+
+ul{margin:0;padding-left:20px;}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>My Resume</h2>
+
+<h3>Objective</h3>
+<p>To work in a good organization and improve my skills.</p>
+
+<h3>Education</h3>
+<p>B.E Computer Engineering</p>
+
+<h3>Skills</h3>
+<ul>
+  <li>HTML</li>
+  <li>CSS</li>
+  <li>JavaScript</li>
+</ul>
+
+<h3>Projects</h3>
+<p>Web development mini projects</p>
+
+<h3>Contact</h3>
+<p>Email: example@gmail.com</p>
+<p>Phone: 1234567890</p>
+
+</div>
+
+</body>
+</html>
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 30px;
+  background: #f4f4f4;
+  transition: 0.3s;
+}
+
+.container {
+  max-width: 700px;
+  margin: auto;
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+h2 {
+  text-align: center;
+  color: #333;
+}
+
+h3 {
+  border-left: 4px solid #007bff;
+  padding-left: 10px;
+}
+
+ul {
+  padding-left: 20px;
+}
+
+button {
+  margin: 10px 5px;
+  padding: 8px 12px;
+  border: none;
+  background: #007bff;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0056b3;
+}
+
+/* DARK MODE */
+.dark {
+  background: #1e1e1e;
+  color: white;
+}
+
+.dark .container {
+  background: #2c2c2c;
+  color: white;
+}
+
+.dark h3 {
+  border-left-color: #00d4ff;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h2>My Resume</h2>
+
+  <h3>Objective</h3>
+  <p>To work in a good organization and improve my skills.</p>
+
+  <h3>Education</h3>
+  <p>B.E Computer Engineering</p>
+
+  <h3 id="skillsTitle">Skills</h3>
+  <ul id="skills">
+    <li>HTML</li>
+    <li>CSS</li>
+    <li>JavaScript</li>
+  </ul>
+
+  <h3>Projects</h3>
+  <p>Web development mini projects</p>
+
+  <h3>Contact</h3>
+  <p>Email: example@gmail.com</p>
+  <p>Phone: 1234567890</p>
+
+  <!-- Buttons -->
+  <button onclick="toggleSkills()">Show/Hide Skills</button>
+  <button onclick="toggleTheme()">Dark/Light Mode</button>
+
+</div>
+
+<script>
+
+// Show / Hide Skills
+function toggleSkills() {
+  let skills = document.getElementById("skills");
+
+  if (skills.style.display === "none") {
+    skills.style.display = "block";
+  } else {
+    skills.style.display = "none";
+  }
+}
+
+// Dark / Light Mode
+function toggleTheme() {
+  document.body.classList.toggle("dark");
+}
+
+</script>
+
+</body>
+</html>

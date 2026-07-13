@@ -1,0 +1,153 @@
+<!--28. Visualize Student Performance Data (marks, attendance, progress) using multiple chart types.-->
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Student Performance</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<h2 style="text-align:center;">Student Performance Dashboard</h2>
+
+<canvas id="marksChart"></canvas>
+<canvas id="attendanceChart"></canvas>
+<canvas id="progressChart"></canvas>
+
+<script>
+let subjects = ["Math","Science","English","CS"];
+let marks = [85, 90, 75, 95];
+
+// MARKS (Bar Chart)
+new Chart(document.getElementById("marksChart"), {
+  type: "bar",
+  data: {
+    labels: subjects,
+    datasets: [{
+      label: "Marks",
+      data: marks,
+      backgroundColor: "blue"
+    }]
+  }
+});
+
+// ATTENDANCE (Pie Chart)
+new Chart(document.getElementById("attendanceChart"), {
+  type: "pie",
+  data: {
+    labels: ["Present","Absent","Leave"],
+    datasets: [{
+      data: [80, 10, 10],
+      backgroundColor: ["green","red","orange"]
+    }]
+  }
+});
+
+// PROGRESS (Line Chart)
+new Chart(document.getElementById("progressChart"), {
+  type: "line",
+  data: {
+    labels: ["Sem1","Sem2","Sem3","Sem4"],
+    datasets: [{
+      label: "Progress",
+      data: [70, 75, 85, 90],
+      borderColor: "purple"
+    }]
+  }
+});
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+<html>
+<head>
+<script src="chart.umd.js"></script>
+</head>
+<body>
+
+    <h3 style="text-align: center;">Student Bar Chart</h3>
+      <canvas id="myChart"></canvas>
+    <h3 style="text-align: center;">Attendance distribution</h3>
+    <canvas id="myChart1"></canvas>
+     <canvas id="myChart2"></canvas>
+
+       <h3 style="text-align: center;">Weather Dashboard</h3>
+    <canvas id="myChart3"></canvas>
+
+    <script>
+        const ctx=document.getElementById("myChart");
+
+
+        new Chart(ctx,{
+            type:"bar",
+            data:{
+                labels:["CSE","IT","ENTC","MECH"],
+                datasets:[{
+                    label: "No. of Students",
+                    data:[120,150,80,100],
+                    backgroundColor:"gray"
+                }]
+            }
+        });
+
+const ctx1=document.getElementById("myChart1");
+
+new Chart(ctx1,{
+    type:"pie",
+    data:{
+        labels:["Present","Absent","Leave"],
+        datasets:[{
+            label:"No of Student",
+            data:[70,20,10],
+            backgroundColor:["Green", "red","orange"]
+        }]
+    }
+});
+
+
+const ctx2=document.getElementById("myChart2");
+ new Chart(ctx2,
+    {
+        type:"doughnut",
+        data:{
+            labels:["Present","Absent","Leave"],
+            datasets:[{
+              
+                label:"No. of Students",
+                data:[70,20,10],
+                backgroundColor:["green","red","orange"]
+            }]
+        }
+    }
+ );
+
+
+ const ctx3=document.getElementById("myChart3");
+
+ new Chart(ctx3,
+    {
+        type:"line",
+        data:{
+            labels:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+            datasets:[{
+                label:"temperature",
+                data:[30, 32, 31, 29, 28, 33, 34],
+                backgroundColor:"blue"
+
+            }]
+        }
+    }
+ );
+
+
+    </script>
+</body>
+</html>

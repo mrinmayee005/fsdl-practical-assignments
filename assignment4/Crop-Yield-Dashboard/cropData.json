@@ -1,0 +1,110 @@
+[{
+  "_id": {
+    "$oid": "69804016819a08bd8a5d90de"
+  },
+  "crop": "Wheat",
+  "year": 2021,
+  "season": "Rabi",
+  "rainfall": 400,
+  "yield": 2600
+},
+{
+  "_id": {
+    "$oid": "69804058819a08bd8a5d90e0"
+  },
+  "crop": "Wheat",
+  "year": 2021,
+  "season": "Rabi",
+  "rainfall": 400,
+  "yield": 2600
+},
+{
+  "_id": {
+    "$oid": "69804058819a08bd8a5d90e1"
+  },
+  "crop": "Wheat",
+  "year": 2022,
+  "season": "Rabi",
+  "rainfall": 430,
+  "yield": 2750
+},
+{
+  "_id": {
+    "$oid": "69804058819a08bd8a5d90e2"
+  },
+  "crop": "Wheat",
+  "year": 2023,
+  "season": "Rabi",
+  "rainfall": 450,
+  "yield": 2900
+},
+{
+  "_id": {
+    "$oid": "69804058819a08bd8a5d90e3"
+  },
+  "crop": "Rice",
+  "year": 2021,
+  "season": "Kharif",
+  "rainfall": 900,
+  "yield": 3200
+},
+{
+  "_id": {
+    "$oid": "69804058819a08bd8a5d90e4"
+  },
+  "crop": "Rice",
+  "year": 2022,
+  "season": "Kharif",
+  "rainfall": 880,
+  "yield": 3100
+},
+{
+  "_id": {
+    "$oid": "69804058819a08bd8a5d90e5"
+  },
+  "crop": "Rice",
+  "year": 2023,
+  "season": "Kharif",
+  "rainfall": 920,
+  "yield": 3300
+},
+{
+  "_id": {
+    "$oid": "69804058819a08bd8a5d90e6"
+  },
+  "crop": "Maize",
+  "year": 2021,
+  "season": "Kharif",
+  "rainfall": 580,
+  "yield": 2200
+},
+{
+  "_id": {
+    "$oid": "69804058819a08bd8a5d90e7"
+  },
+  "crop": "Maize",
+  "year": 2022,
+  "season": "Kharif",
+  "rainfall": 600,
+  "yield": 2300
+},
+{
+  "_id": {
+    "$oid": "69804058819a08bd8a5d90e8"
+  },
+  "crop": "Maize",
+  "year": 2023,
+  "season": "Kharif",
+  "rainfall": 620,
+  "yield": 2400
+},
+{
+  "_id": {
+    "$oid": "69804058819a08bd8a5d90e9"
+  },
+  "crop": "Barley",
+  "year": 2023,
+  "season": "Rabi",
+  "rainfall": 350,
+  "yield": 2000
+}]

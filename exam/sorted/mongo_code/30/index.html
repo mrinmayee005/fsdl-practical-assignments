@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h3>Event Registration</h3>
+
+<input id="n" placeholder="Name">
+<input id="e" placeholder="Email">
+<input id="ev" placeholder="Event">
+
+<button onclick="add()">Register</button>
+<button onclick="show()">Show</button>
+
+<ul id="l"></ul>
+
+<script>
+const u="http://localhost:3000"
+
+// ➤ Add participant
+add=()=>fetch(u+"/add",{method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({name:n.value,email:e.value,event:ev.value})
+}).then(_=>alert("Registered"))
+
+// ➤ Show participants
+show=()=>fetch(u+"/all")
+.then(r=>r.json())
+.then(d=>l.innerHTML=d.map(x=>
+`<li>${x.name} - ${x.email} - ${x.event}</li>`
+).join(""))
+</script>
+
+</body>
+</html>

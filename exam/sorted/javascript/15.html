@@ -1,0 +1,103 @@
+<!--15. Implement a Stopwatch Application with start, stop, and reset functionalities.<html>
+    <h3>Stopwatch</h3>
+
+    <h2 id="t">00:00:00</h2>
+
+    <button onclick="start()">Start</button>
+    <button onclick="stop()">Stop</button>
+    <button onclick="reset()">Reset</button>
+
+    <script>
+        let s=0,m=0,h=0,timer;
+
+        function show()
+        {
+            document.getElementById("t").innerText=
+            (h<10?"0":"")+h+":"+
+             (m<10?"0":"")+m+":"+
+              (s<10?"0":"")+s;
+
+        }
+
+        function start()
+        {
+            if(!timer)
+        {
+            timer=setInterval(()=>{
+                s++;
+                if(s==60){s=0;m++}
+                if(m==60){m=0;h++}
+                show();
+
+            },1000);
+        }
+        }
+
+        function stop()
+        {
+            clearInterval(timer);
+            timer=null;
+        }
+
+        function reset()
+        {
+            stop();
+            s=m=h=0;
+            show();
+        }
+    </script>
+</html>-->
+
+<html>
+    <head> <title>Stop watch</title></head>
+
+   <body>
+    <div class="container">
+    <h3>Stop watch</h3>
+<br>
+    <h2 id="t">00:00:00</h2>
+    <button onclick="start()">Start</button>
+    <button onclick="stop()">Stop</button>
+    <button onclick="reset()">Reset</button>
+</div>
+
+<script>
+    let s=0,m=0,h=0,timer;
+    function show()
+    {
+        document.getElementById("t").innerText=
+        (h<10?"0":"")+h+":"+
+        (m<10?"0":"")+m+":"+
+        (s<10?"0":"")+s;
+    }
+
+    function start()
+    {
+        if(!timer)
+    {
+        timer=setInterval(()=>{
+            s++;
+            if(s==60) {s=0; m++;}
+            if(m==60){m=0; h++}
+            show();
+        },1000);
+    }
+    }
+
+    function stop()
+    {
+        clearInterval(timer);
+        timer=null;
+    }
+
+    function  reset()
+    {
+        stop();
+        s=m=h=0;
+        show();
+        
+    }
+</script>
+
+   </body>
+</html>

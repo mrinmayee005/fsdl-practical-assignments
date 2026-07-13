@@ -1,0 +1,34 @@
+:root {
+    --bg: #f6f6f8;
+    --card: #ffffff;
+    --accent: #405cf5;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+body { background: var(--bg); display: flex; align-items: center; justify-content: center; height: 100vh; }
+
+.dashboard-wrapper {
+    display: flex; width: 95%; max-width: 1100px; height: 85vh;
+    background: white; border-radius: 30px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+}
+
+.sidebar { width: 300px; padding: 40px; background: white; border-right: 1px solid #f0f0f0; }
+.search-container { display: flex; gap: 10px; margin-bottom: 30px; }
+.search-container input { width: 100%; padding: 10px; border: none; background: #f1f1f1; border-radius: 8px; outline: none; }
+.search-container button { background: var(--accent); color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; }
+
+.main-display { text-align: center; }
+.main-display img { width: 140px; }
+.main-display h1 { font-size: 3.5rem; margin: 10px 0; }
+.time-container { margin: 10px 0; font-size: 1.1rem; }
+#localTime { color: #888; margin-top: 5px; }
+hr { margin: 25px 0; border: 0; border-top: 1px solid #eee; }
+.meta-info p { margin: 10px 0; text-align: left; color: #555; }
+
+.content { flex: 1; padding: 40px; overflow-y: auto; }
+.highlights-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin: 25px 0; }
+.card { background: white; padding: 25px; border-radius: 20px; border: 1px solid #f0f0f0; }
+.card .label { color: #aaa; font-size: 0.9rem; font-weight: 600; }
+.card .val { font-size: 1.8rem; font-weight: bold; margin-top: 10px; }
+
+.chart-box { background: white; padding: 20px; border-radius: 20px; border: 1px solid #f0f0f0; margin-top: 20px; }

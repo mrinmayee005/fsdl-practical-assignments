@@ -1,0 +1,29 @@
+<!--  Skill Showcase Component: Design a reusable "Skill Bar" UI 
+ element that accepts skill name and proficiency percentage 
+ as inputs for a portfolio. 
+ Interactive Frontend 
+ JavaScript-->
+
+
+ <html>
+    <head><title>Reusable skill component</title></head>
+    <body>
+        <input id="name" placeholder="skills">
+        <input id="per" type="number" placeholder="%">
+        <button onclick="add()">ADD</button>
+        <div id="box"></div>
+
+        <script>
+            function add()
+            {
+                let n=name.value,p=per.value;
+                box.innerHTML+=`<p>${n} (${p}%)<p>
+               <div style="background:#ddd";width:200px">
+                <div style="background:green;width:${p}%;color:#fff"> ${p}%</div>
+                </div>`
+            }
+        </script>
+
+    </body>
+
+ </html>
