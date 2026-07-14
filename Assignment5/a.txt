@@ -1,10 +1,1 @@
-USY1mGo5gO2Uwzm5-password
-username: mpk1620025_db_user
-mongodb+srv://mpk1620025_db_user:USY1mGo5gO2Uwzm5@cluster0.ifommnl.mongodb.net/?appName=Cluster0
 
-
-
-
-
-
-mongodb+srv://mpk1620025_db_user:USY1mGo5gO2Uwzm5@cluster0.ifommnl.mongodb.net/
